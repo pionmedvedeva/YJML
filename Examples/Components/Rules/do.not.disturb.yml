@@ -1,0 +1,34 @@
+Напишите ивент, о котором ваше правило и способ подтвердить этот ивент. 
+event:
+  title: Someone disturbed another 
+  description: Someone disturbed another person
+  content:
+    text: ANY_ROLE@ANY_TILE=DISTURBER disturbed and consumed time of ANY_ROLE=DISTURBED
+    media: 
+    link: !href
+  confirmation_method: #отметить один или несколько подходящих
+    spec_role_report: DISTURBED #пострадавший например, или кто-то еще, кто не свидетель а участник, можно по маске
+  binary: no
+  event_scales: 
+    time_hours: 
+    disturbance_intensity: 1-10
+
+Правило касается этого ивента
+
+event_confirmed: Someone disturbed another
+event_modality: !(may)
+when: always
+presence_actions:
+  enforcer: court_decision
+    on_whom: DISTURBER 
+    orders: pay (event_scales.time_hours*DISTURBED hourly rate), apologize
+    rating: 
+      scale: good_cohabitant # must be specified in this tile or in supertile chain  
+      amount: (disturbance_intensity*time_hours*0,1)
+exceptions:
+  reason_for_distubance: EVENT # specified event где мы сказали, что чувак, которого тревожат должен признать, что причина важная
+flex: fixed until 1.01.2024 #почему бы и нет...
+value: Freedom@Humanity
+tags: [string] # for grouping purposes and other
+
+

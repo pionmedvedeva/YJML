@@ -1,0 +1,33 @@
+
+  type: rule
+  props:
+    title: WashHands
+    who: Husband, Wife, Kid # roles
+    modality: must
+    when: 
+     - after #keyword 
+     - EVENT_ID # coming home, event which is reported by someone, event is reported in specific form
+     - createEvent.comingHome 
+    do:
+     - createEvent.washHands #wrapped action specified in tile
+     - giveEvidence.washHands #wrapped action specified in tile
+    to_whom: 
+    rating:
+      comply:
+        scale_id: 123jdfjsvn # scale specified in tile, say named "hygiene", do you need form of this spec?
+        size:
+          min: 1
+          max: 1
+        approve: auto # cause we requested proof and believe that if family member uploaded proof they didn't cheat
+      break:
+        scale_id: 123jdfjsvn
+        size:
+          min: 2
+          max: 2 # losing more then gaining! that is normal situation with non-zero sum
+        approve: auto
+    flex: fixed until 1.1.2030 #hope for clean world...
+    value: Heallth #specified in tile
+
+  # ROLE must|may in some conditions do something (to ROLE). 
+  # If yes, then we rate it somehow, if no, another way
+  # and it will be so FOREVER|TILL DATE because of VAlUE

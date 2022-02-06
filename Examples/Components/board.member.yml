@@ -1,0 +1,60 @@
+          BoardMember:
+            title: Trustee
+            description: Person with expirience
+            tags:
+              - justice
+              - board
+              - management
+
+            active_stage_bdi:
+              beliefs: [VALUE_NAME;we|fit], [EVENT;BOOL] # value specified in tile
+              desire: [action] # one, max two well-specified event-creation actions, what ROLE want to see occured
+              intention: string # main strategy to do specified above  
+
+            life_cycle_stages: 
+                - invite # to fill form or...
+                  rights: [action]
+                - active
+                  rights:
+                    - _vote
+                    - unAnonimousVote
+                    - vetoDecision
+                    - suggestCEO
+                    - voteForCLevel
+                - ex
+                  rights: [action]
+
+            profile_form:
+              params: # what tile wants to store in user's profile about user linked to this role
+                Name: string
+                Surname: string
+                Expirience: string
+              
+            role_requirements:
+              modality: must|must_not # you can see some kind of parralelism with rule declaration, but "may" modality is not needed
+              other_roles:
+                tile: TILE_ID # tile in which other role can or can't be
+                role_name: ROLE_NAME
+                  life_cycle_stage: LIFE_CYCLE_STAGE_NAME
+                role_tags: [string] 
+                # leave all previous blank and "must have at least one role with this tag" in case of "must" modality
+                # and "must have no roles with this tag" in case of "must_not" modality
+              other:
+                params: 
+                  exp_field: @this.tile.tags
+                  experience_years: 5
+                  _open_profile: 1 # for view because we declare that our board will be public
+
+            application_form: # if any
+              params: 
+                Name: string
+                Surname: string
+                Expirience: string
+                Why Board: string
+                What you see as the main goal of project for now: string
+
+          # ROLE_NAME belives something and wants something, so intends to do something. 
+          # ROLE'S LIFE CYCLE is as follows STAGES. Each stage posseses its rights for the ROLE. 
+          # The TILE will collect and store the PROFILE FORM info in connection to this role. 
+          # To play this ROLE, USER must or must not something.
+          # Application form is as follows.

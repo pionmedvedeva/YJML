@@ -1,0 +1,105 @@
+ВЕСЬ ДОК ПЕРЕНЕСЕН В НОУШЕН ПОКА ЧТО
+#Пробрасывание внутрь сабтайла (а возможно и супертайла) на примере роли + концепт древесной системы прав ролей
+
+#тайл россии, пример захвата роли из сабтайла, пример иерархии прав
+tile_russia:
+	roles:
+		president:
+		bolshaya_shishka: 
+		## это на том же уровне, что президент?
+		# а что, у нас есть разноуровневые роли в рамках одного тайла?
+			auto.bus_line_usage = 1
+			auto.special_lights = 1
+			auto.payless_driving = 10
+			...
+		...
+	rules:
+		if auto.payless_driving == 10: #иерархия прав, нужно проверять конфликты (вроде просто)
+			auto.payless_driver = 1
+			auto.payless_gas = 1
+			proberty.payless_car = 4x4
+		constrains: #or boundaries
+			if subtile.is_russian_region:
+				role.assign.bolshaya_shishka for *subtile.role.leader #захват из сабтайла
+			elif subtile.is_vedomstvo:
+				role.assign.bolshaya_shishka for *subtile.role.minister #захват роли из сабтайла
+			else:
+				subtile.kick #ну это если структура такая что в государство могут входить только регионы
+
+## где задеклалирровано что у этого тайла есть сабтайлы. 
+## откуда взялисть констрэйины
+## ты написал правила чисто для ролей?
+## задекларируй пожалкуйста в развернутой форме. 
+## вторую посмотрю после этого 
+
+
+#тайл события "главное собрание", с примером проброса из супертайла
+
+tile_glavnoe_sobranie: #тип "ивент"
+	roles:
+		leader:
+		speaker:
+		invited:
+	rules:
+		presence: every december 29 16:00-21:00
+		constrains: #or boundaries
+			must be: supertile == tile_russia
+			any role must be *supertile.role.power >= 70
+			role.assign.leader if *supertile.role.president #проброс роли из супер тайла
+			role.assign.speaker if inaguration.year == reality.year #вариант присвоения роли
+			role.assign.invited if *supertile.role.bolshaya_shishka: #проброс роли из супер тайла
+
+#тайл города москва
+tile_moscow:
+	roles:
+		leader: 
+		...
+	propertiies: #или это можно назвать аттрибуты\свойства\теги, а где размещается -- пока не знаю
+		is_russian_region: true
+		is_capital: true
+		...
+	...
+
+#шаблон, функционально задающий требования к российскому региону, механизм ограничений
+tile_russian_region_template:
+	must include:
+		roles:
+			leader: #можно включить и полное или частичное описание роли
+			leader_assistant:
+			region_citizen: #можно включить и полное описание роли
+		
+	
+	must not include:
+		roles:
+			president:
+			school.teacher:
+			car.driver:
+
+#шаблон, функционально задающий требования к российской школе, пример запроса к супер-супер тайлу
+tile_school_template:
+	roles:
+		must inclube:
+			director
+			zavuch
+			povarikha
+	rules:
+		must_be: supertile.supertile.supertile == tile_russia #школа-район-регион-минобранауки-страна
+		#показывает, где должна российская школа находиться в структуре россии
+
+#пример механизама наследования	
+tile_school_1514:
+	rules:
+		constrains:
+			must be ancestor of tile_school_template #механизм наследование какого-то шаблона
+			#также это может проверяться при попытке разместить этот тайл в месте, предназначенном для школ
+			#например, тайл "подведомственные организации ломоносовского района" может это требовать (и, возможно, хранить у себя шаблон)
+			#собственно, возможность обозначать сущность типа класс кажется необходимо.
+			#И тогда описание класса как содержит в себе шаблон=требования к экземплярам
+
+
+#альтернативный варинат механизама наследования	
+tile_minobrnauki.moscow.lomonosovsky:
+	rules:
+		constrains:
+			subtile must be ancestor of tile_school_template #механизм наследования шаблона школы
+			#проверка производится при попытке добавления сабтайла

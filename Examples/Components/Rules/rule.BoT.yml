@@ -1,0 +1,39 @@
+Напишите ивент, о котором ваше правило и способ подтвердить этот ивент. 
+event:
+  title: Fin Report from Bot 
+  description: BoT shows full financial report including .. and ... and makes it public
+  confirmation_method: actor_report
+  content:
+    text: BoardMember publishes report # с масками, например "ROLE публикует Х", или "ROLE бьет ROLE"
+    media: reports.zip
+    link: "https://..."
+  binary: no # допустим, отчет может быть разного качества...
+  scales: # это либо есть либо нет, или есть какие-то степени? бывает по нескольким шкалам, например:
+    completeness: 1-10
+
+Правило касается этого ивента
+
+event_confirmed: Fin Report from Bot #Если мы заметили что это произошло...
+event_modality: must
+when:
+  - annually # это значит что после этого начинает тикать счетчик и если через год это не произошло снова...
+presence_actions:
+  enforcer: system
+    on_whom: BoardMember #неясно, все, или тот кто запостил, например потому что он и готовил. По текущим правилам AoA выходит что всех, потому что не уточнено никакое разделение обязанностей
+    orders: 
+    rating: # это можно написать тут же, но делает ситема энивей и пусть будет шорткат 1-10 а не min-max
+      scale: competence # такая шкала должна быть декларирована в тайле и в ней должно быть можно оценивать BoardMember`ов
+      amount: completeness
+absence_actions: # актуально только для действий must и которые должны случиться в какую-то дату-время или после других событий
+  enforcer: system
+    on_whom: BoardMember
+    orders: send report immediately
+    rating: # это можно написать тут же, но делает сиcтема энивей и пусть будет шорткат 1-10 а не min-max
+      scale: competence # такая шкала должна быть декларирована в тайле и в ней должно быть можно оценивать BoardMember`ов
+      amount: -1 to -5
+  #можно еще таких нахерачить
+flex: immutable|fixed until DATE.TIME|flexible
+value: Transparency
+tags: [string] # for grouping purposes and other
+
+

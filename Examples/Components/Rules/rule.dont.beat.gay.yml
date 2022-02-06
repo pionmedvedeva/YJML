@@ -1,0 +1,34 @@
+Напишите ивент, о котором ваше правило и способ подтвердить этот ивент. 
+event:
+  title: Somebody beats gay 
+  description: Whatever who agressively breaks physical boundaries of gay person.
+  confirmation_method: #отметить один или несколько подходящих
+    court: 11_gay_friendly_court # задача суда/судьи — чисто установить, был ли факт избиения гея на почве гейскости.  
+  content:
+    text: ANY_ROLE@ANY_TILE=AGRESSOR agressively breaks physical boundaries GAY@GAY_TILE because of sexual orientation.
+    media: 
+    link: !href
+  binary: no #если тут "yes" то дальше заполнять не надо
+  event_scales: # это либо есть либо нет, или есть какие-то степени? бывает по нескольким шкалам, например:
+    severity: 1-10
+
+Правило касается этого ивента
+
+event_confirmed: Somebody beats gay
+event_modality: !(may) #не разрешено
+when: always
+presence_actions:
+  enforcer: court_decision
+    on_whom: AGRESSOR # ссылаемся по даннной выше маске в нашем тайле
+    orders:
+      - pay 11111 to qoirshd9278wr
+      - post video # можем специфицировать ивент тоже, не проблема 
+    rating: # это можно написать тут же, но делает система энивей и пусть будет шорткат 1-10 а не min-max
+      scale: homophobia 
+      amount: severity*10
+
+flex: immutable
+value: Gay Rights, Life@Humanity, Freedom@Humanity 
+tags: [string] # for grouping purposes and other
+
+
