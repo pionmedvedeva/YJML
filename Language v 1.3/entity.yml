@@ -1,0 +1,9 @@
+entity:
+
+  title: string
+  description: string
+
+  # after that could be
+
+  @tile.yml
+  @event_reported.yml

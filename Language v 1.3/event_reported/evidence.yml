@@ -1,0 +1,8 @@
+type: evidence
+props:
+  witness: # who reported the evidence
+  title: string
+  description: string
+  datetime: DATETIME
+  status: rumor | firsthand
+  media: # if any
