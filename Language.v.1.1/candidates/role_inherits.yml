@@ -1,0 +1,71 @@
+  type: role
+  props:
+    title: Judge
+    description: Judge can review simple cases
+    tags: [court,justice,judge]
+    active_stage_bdi:
+      beliefs: [justice;POSITION]
+      desire: [someJusticeWrappedAction] # one, max two well-specified event-creation actions, what ROLE want to see occured
+      intention: Bring justice to the world   
+    life_cycle_stages: 
+      type: life_cycle_stage
+				title: active
+          rights:
+            - collectEvidence
+            - examineEvidence(evidence_array) 
+            - createCaseResult
+    profile_form:
+      params: [JudgeForm]
+    role_requirements:
+      role_requirements:
+      modality: must_be 
+      props: 
+        tile: SomeRandomTile 
+        role: CourtMember 
+        role_status: active  
+      modality: must_not
+      props: 
+        tile: SomeRandomTile 
+        role: Defendant 
+        role_status: active 
+      other:
+        params: [{randomParam:true}]
+    application_form: 
+      params: [JudgeApplicationForm]
+ 
+ ############################
+
+  type: role
+  props:
+    title: SuperiorCourtJudge
+    description: Superior Court Judge can review complex cases and make a revision of Judge cases
+    tags: [@.Judge.tags; superior_court_judge_tag1]
+
+    active_stage_bdi:
+      beliefs: [@.Judge.beliefs]
+      desire: [@.Judge.action] 
+      intention: Bring ABSOLUTE justice to the world  
+
+    life_cycle_stages: 
+      type: life_cycle_stage
+        title: active 
+          rights:
+            @.Judge.life_cycle_stage.active
+            - reviewCaseResult(case); 
+            - changeCaseResult(case);
+        title: ex 
+          rights:
+            @OtherRandomTile.RandomRole.life_cycle_stage.ex
+    profile_form:
+      params: [SuperiorCourtJudgeForm]  
+    role_requirements:
+      @.Judge.role_requirements.must_not
+      modality: must_be 
+      props: 
+        tile: SomeRandomTile 
+        role: Judge 
+        role_status: active  
+      other:
+        params: [{key:value}]
+    application_form: # if any
+      params: [SuperiorCourtJudgeForm]

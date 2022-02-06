@@ -1,0 +1,1015 @@
+court:
+
+  title: Суд
+  description: В тайле описано общественное отношение типа "Суд", в котором люди могут добиться справедливости, если будут следовать правилам этого тайла. С помощью этого тайла люди смогут защищать свои права и восстанавливать нарушенную справедливость через обращение в суд. По решению суда люди смогут получать компенсации и наказания.
+
+  tile:
+
+    functional:
+    
+      purpose_of_tile: 
+        type: purpose_of_tile
+        props:
+          title: Справедливое правосудие
+          trackable: 
+           - _makeJudgment
+          untrackable: Тайл предназначен для обеспечения правосудия, восстановления справедливости и разбора трудных или конфликтных ситуаций, в случае, если игроки не смогли придти к соглашению иными способами. Тайл определяет степень правоты и виновности игроков, обратившихся в суд.
+          
+      to_judiciary_branch:
+        type: to_supertile
+        props:
+          title: Обеспечение работы механизма прецедентного права
+          supertile: judiciary_branch
+          benefit: Прецеденты справедливо вынесенных судебных решений, что в свою очередь влияет на дальнейшие решения и поведение игроков юрисдикции. 
+          
+      to_jurisdiction:
+        type: to_supertile
+        props:
+          title: Справедливое правосудие
+          supertile: jurisdiction_with_court
+          benefit: Решения о правоте и виновности игроков.
+
+      to_legislation_branch: 
+        type: to_supertile
+        props:
+          title: Тестирование законодательной системы
+          supertile: legislation_branch
+          benefit: Тестирование предложенной им законодательной системы.
+
+      to_judge_b1: 
+        type: to_players 
+        props:
+          title: Материальное вознаграждение
+          player: judge
+          benefit: Денежное вознаграждение за качественно выполненное судейство
+          
+      to_judge_b2: 
+        type: to_players 
+        props:
+          title: Рейтинг судьи
+          player: judge
+          benefit: При качественном судействе судья будет получать очки рейтинга, которые покажут, что судья является специалистом в своем дела.
+          
+      to_plaintiff_b1: 
+        type: to_players 
+        props:
+          title: Восстановление справедливости
+          player: plaintiff
+          benefit: Человек получает справедливое решение по своему вопросу.
+          
+      to_plaintiff_b2: 
+        type: to_players 
+        props:
+          title: Материальная компенсация
+          player: plaintiff
+          benefit: Денежная компенсация за полученный ущерб.
+          
+      to_defendant: 
+        type: to_players 
+        props:
+          title: @.to_plaintiff_b1.title
+          player: defendant
+          benefit: @.to_plaintiff_b1.benefit
+          
+      to_lawyer: 
+        type: to_players 
+        props:
+          title: Материальное вознаграждение
+          player: lawyer
+          benefit: Денежное вознаграждение за оказываемые юридические услуги, которые соответсвуют условиям контракта.
+          
+      to_expert: 
+        type: to_players 
+        props:
+          title: @.to_lawyer.title
+          player: expert
+          benefit: @.to_lawyer.benefit
+
+      to_witness: 
+        type: to_players 
+        props:
+          title: Рейтинг
+          player: witness
+          benefit: Очки рейтинга за вклад в восстановление справедливости.
+
+    terms:
+    type: term
+    props:
+      title: Прецедентное право
+      description: Правовая система в которой источником права является прецедент.
+      tags:
+       -  case law
+    props:
+      title: Прецедент
+      description: Предыдущее судебное решение.
+      tags:
+       - case
+       - example
+       - legal precedent
+
+    actions:
+      
+      basic:
+
+      #judge
+        _makeJudgment #судья выносит приговор или объявляет ответчика невиновным
+        _makeDecision #Судья соглашается или отказывается от чего-то, что было запрошено через _makeRequest
+        _voteForJudgment #Если судей много и у них есть разногласия, то они должны голосовать за приговор
+        _voteForDecision #Если судей много и у них есть разногласия, то они должны голосовать за одобрение или отказ от чего-то, что было запрощено через _makeRequest
+        _removeFromRole #позволяет судье удалить человека из роли
+        _addRating #судье, чтобы он мог накидать рейтинга (а в рамках какой рейтинговой шкалы??)
+
+      #plaintiff + defendant
+        _fileCharge #истец может предъявить обвинение
+        _summonLawyer #привлечь адвоката
+        _suggestSettlement #предложить мирное соглашение, которое возможно устроит всех участников процесса
+        _acceptSettlement #принять предложенное мирное соглашение
+        _receiveCompensation #истец получает моральную или материальную компенсацию за решение, вынесенное в его пользу
+
+      #common
+        _acceptRole #через этот экшен каждый потенциальный участник процесса может подтвердить участие своего профиля в этом судебном процессе
+        _declineRole #через этот экшен каждый потенциальный участник процесса может отказаться участовать в этом судебном процессе
+        _makeRequest #запросить вызов свидетеля, передачу суду какой-то информации или сделать еще какой-то другой запрос
+        _requestContractChange #запросить изменение условий, согласно которым justice специалист будет участвовать в процессе
+        _addToCharge # добавить свои показания или мнение к делу
+        _resolveContract # истец, ответчик, эксперт, лоер через это действие подтверждают, что условия контракта были выполнены и их работа здесь закончена
+        
+    constructive:
+
+      subtiles: ?
+
+      roles:
+
+        target_roles:
+          
+          judge:
+            type: role
+            props:
+              title: Судья
+              description: Justice specialist, который принимает решения о том, виновен или невиновен человек, и определяет для виновного наказание.
+              tags: 
+               - justice
+               - judge
+               - judgement
+                
+              active_stage_bdi:
+                beliefs:
+                 - justice
+                desire:
+                 - _makeJudgment
+                intention: Максимально внимательно выслушивает показания всех участников судебного процесса, анализирует эти показания и иную предоставленную информацию, после чего выносит максимально справедливое решение по рассматриваемому вопросу.
+                
+              life_cycle_stages: 
+                type: life_cycle_stage
+                 - invite 
+                   rights:
+                    - _acceptRole
+                    - _requestContractChange
+                    - _declineRole
+                 - active
+                   rights:
+                    - _makeDecision #_acceptWitnessCall + _declineWitnessCall + _acceptExpertCall + _declineExpertCall и иные решения
+                    - _makeJudgment
+                    - _voteForDecision
+                    - _voteForJudgment
+                    - _removeFromRole
+                    - _addRating
+                      
+              profile_form:
+                params: 
+                 - TILE_ID: THIS_TILE
+                 - role_name: judge #this person acquired role "judge" in tile ID "court"
+                 - form_of_agreement: tile_contract_1 #тут передается тип контракта, который подписал судья на участие в тайле
+                 - hisory_of_decisions: decision1, decision2, decisons3 #хотелось бы сохранить в профиль историю десиженов по данному тайлу
+                 - type_of_case: string #CIVIL or CRIMINAL or CONSTITUTIONAL or ... #тут передается тип рассмотренного кейса, это позволяет составить инфу о том, в каких делах судья участвовал
+                
+              judge_role_requirements_1:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: plaintiff
+                    life_cycle_stage: active
+
+              judge_role_requirements_2:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: defendant
+                    life_cycle_stage: active
+                 
+              judge_role_requirements_3:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: lawyer
+                    life_cycle_stage: active
+                    
+              judge_role_requirements_4:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: witness
+                    life_cycle_stage: active
+
+              judge_role_requirements_5:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: expert
+                    life_cycle_stage: active
+
+              judge_role_requirements_6:
+                modality: must
+                other:
+                  params:
+                    - TILE_ID: jurisdiction_with_court_1
+                    - scale_id: JWC1_positive
+                    - amount: => 2000
+           
+              judge_role_requirements_7:
+                modality: must_not
+                other_roles:
+                  role_tags:
+                    - unсompensated damage
+                    - criminal
+            
+              application_form:
+                params:
+                 - hourly_rate: number #how much money he or she wants for the job
+
+          plaintiff:
+            type: role
+            props:
+              title: Истец
+              description: Человек, начинающий судебное дело для восстановления нарушенной справедливости.
+              tags: 
+               - пострадавший
+               - жертва
+
+              active_stage_bdi:
+                beliefs:
+                  - justice
+                desire:
+                  - _receiveCompensation
+                intention: Honestly provides all the requested information and evidence that confirms his correctness and prove that his claim is true. Does not mislead the court under any pretext. Can interact with the court through his legal representative. Attracts a lawyer to protect his interests, if desired.
+
+              life_cycle_stages: 
+                type: life_cycle_stage
+                 - application
+                   rights:
+                    - _fileCharge
+                    - _suggestSettlement
+                    - _adjustSettlement
+                    - _acceptSettlement
+                    - _declineSettlement
+                    - _summonLawyer
+                 - active
+                   rights:
+                    - _addToCharge #testify
+                    - _makeRequest #  _callForWitness + callForExpert
+                    - _summonLawyer
+                    - _resolveContract
+                 - ex
+                   rights: 
+                    - _resolveContract
+                    - _requestTrialData # истец после судебного заседания может запросить все данные по этому заседанию одним пакетом
+                    - _receiveCompensation
+
+              profile_form:
+                params:
+                 - TILE_ID: THIS_TILE
+                 - role_name: plaintiff #this person acquired role "plaintiff" in tile ID "court"
+                 - positive_side_of_judgement: YES or NO #встал ли суд на сторону истца
+    
+              plaintiff_role_requirements_1:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: judge
+                    life_cycle_stage: active
+
+              plaintiff_role_requirements_2:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: defendant
+                    life_cycle_stage: active
+                 
+              plaintiff_role_requirements_3:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: lawyer
+                    life_cycle_stage: active
+
+              plaintiff_role_requirements_4:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: expert
+                    life_cycle_stage: active
+                    
+              plaintiff_role_requirements_5:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: witness
+                    life_cycle_stage: active
+
+              application_form:
+                params:
+                 - claim_description: string
+                 - claim_evidence: [media]
+                 - witness_ID: [USER_ID]
+
+          defendant:
+            type: role
+            props:
+              title: Defendant
+              description: Человек, против которого ведется судебное разбирательство.
+              tags:
+               - suspect
+
+              active_stage_bdi:
+                beliefs:
+                 - minimization_of_damage
+                desire:
+                 - _addToCharge #testify #приняли за рабочую версию, что желание ответчика - оправдать себя через дачу показаний
+                intention: Defend yourself by providing all the requested information and evidence that confirms his innosence. Can interact with the court through his legal representative. Attracts a lawyer to protect his interests, if desired.
+
+              life_cycle_stages: 
+                type: life_cycle_stage
+                 - invite 
+                   rights:
+                    - _acceptRole
+                    - _declineRole
+                    - _suggestSettlement
+                    - _adjustSettlement
+                    - _acceptSettlement
+                    - _declineSettlement
+                    - _summonLawyer
+                 - active
+                   rights:
+                    - _addToCharge #testify
+                    - _makeRequest #  _callForWitness + callForExpert
+                    - _summonLawyer
+                    - _resolveContract #в случае необходимости поменять адвоката
+                 - ex
+                   rights:
+                    - _requestTrialData # ответчик после судебного заседания может запросить все данные по этому заседанию одним пакетом
+                    - _resolveContract
+
+              profile_form:
+                params:
+                 #- TILE_ID: court
+                 #- role_name: defendant  #this person acquired role "defendant" in tile ID "court"
+                 - positive_side_of_judgement: YES or NO #встал ли суд на сторону истца
+    
+              defendant_role_requirements_1:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: judge
+                    life_cycle_stage: active
+
+              defendant_role_requirements_2:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: plaintiff
+                    life_cycle_stage: active
+                 
+              defendant_role_requirements_3:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: lawyer
+                    life_cycle_stage: active
+
+              defendant_role_requirements_4:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: expert
+                    life_cycle_stage: active
+                    
+              defendant_role_requirements_5:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: witness
+                    life_cycle_stage: active
+
+              application_form:
+                params:
+                  - defendant_position_on_claim: string
+                  - defendant_evidence: [media]
+                  - witness_ID: [USER_ID]
+
+          lawyer:
+            type: role
+            props:
+              title: Lawyer
+              description: Justice specialist, который защищает позицию участника судебного заседания, с которым у него заключен контракт.
+              tags:
+               - legal
+               - protection
+
+              active_stage_bdi:
+                beliefs:
+                 - professionalism
+                 - decent_reward
+                desire: 
+                 - _resolveContract
+                intention: С помощью знаний в области юриспруденции помогает отстоять участнику судебного заседания его точку зрения. Стремится как можно быстрее достичь завершения процесса в пользу участника, чьи интересы защищает.
+
+              life_cycle_stages: 
+                type: life_cycle_stage
+                 - invite 
+                   rights:
+                    - _acceptRole
+                    - _declineRole
+                    - _requestContractChange
+                 - active
+                   rights:
+                    - _addToCharge #testify
+                    - _makeRequest
+                    - _resolveContract
+                 - ex
+                   rights: 
+                    - _resolveContract
+
+              profile_form:
+                params:
+                 - positive_side_of_judgement: YES or NO #встал ли суд на сторону клиента
+    
+              lawyer_role_requirements_1:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: judge
+                    life_cycle_stage: active
+
+              lawyer_role_requirements_2:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: plaintiff
+                    life_cycle_stage: active
+                 
+              lawyer_role_requirements_3:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: defendant
+                    life_cycle_stage: active
+
+              lawyer_role_requirements_4:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: expert
+                    life_cycle_stage: active
+                    
+              lawyer_role_requirements_5:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: witness
+                    life_cycle_stage: active
+
+              application_form:
+                params:
+                 - CV: link # or [file]
+                 - case_success_evaluation: string #1 - 100%
+                 - hourly_rate: number #how much money he or she wants for the job
+                
+          witness:
+            type: role
+            props:
+              title: Witness
+              description: Человек, который представляет свою позицию относительно обсуждаемого на судебном процессе вопроса.
+              tags:
+               - opinion
+               - evidence
+
+              active_stage_bdi:
+                beliefs:
+                  - safety
+                  - decent_reward
+                desire:
+                  - _addToCharge
+                intention: С помощью имеющейся информации подтверждает, опровергает или дополняет показания участника судебного процесса.
+
+              life_cycle_stages: 
+                type: life_cycle_stage
+                 - invite 
+                   rights:
+                    - _acceptRole
+                    - _declineRole
+                 - active
+                   rights:
+                    - _addToCharge #testify
+                    - _makeRequest #Может попросить вызвать свидетелем другого человека, который осведомлен о ситуации лучше
+    
+              witness_role_requirements_1:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: judge
+                    life_cycle_stage: active
+
+              witness_role_requirements_2:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: plaintiff
+                    life_cycle_stage: active
+                 
+              witness_role_requirements_3:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: defendant
+                    life_cycle_stage: active
+
+              witness_role_requirements_4:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: expert
+                    life_cycle_stage: active
+                    
+              witness_role_requirements_5:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: lawyer
+                    life_cycle_stage: active
+
+              application_form:
+                params:
+                 - agreement: bool #does the person agree to be a witness
+                
+          expert:
+            type: role
+            props:
+              title: Expert
+              description: Justice specialist, который представляет свою экспертную позицию относительно обсуждаемого на судебном процессе вопроса.
+              tags:
+               - opinion
+               - evidence
+               - expertise
+
+              active_stage_bdi:
+                beliefs:
+                 - professionalism
+                 - decent_reward
+                desire:
+                  - _resolveContract
+                intention: С помощью экспертизы в определенной области подтверждает, опровергает или дополняет показания участника судебного процесса.
+
+              life_cycle_stages: 
+                type: life_cycle_stage
+                 - invite 
+                   rights: 
+                    - _acceptRole
+                    - _declineRole
+                    - _requestContractChange
+                 - active
+                   rights:
+                    - _addToCharge #testify
+                    - _resolveContract
+                 - ex
+                   rights: 
+                    - _resolveContract
+
+              profile_form:
+                params:
+                 - expertise_amount_during_trial: number
+                    
+              expert_role_requirements_1:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: judge
+                    life_cycle_stage: active
+
+              expert_role_requirements_2:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: plaintiff
+                    life_cycle_stage: active
+                 
+              expert_role_requirements_3:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: defendant
+                    life_cycle_stage: active
+
+              expert_role_requirements_4:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: witness
+                    life_cycle_stage: active
+                    
+              expert_role_requirements_5:
+                modality: must_not
+                other_roles:
+                  tile: court
+                  role_name: lawyer
+                    life_cycle_stage: active
+
+              application_form:
+                params:
+                 - CV: link # or [file]
+                 - hourly_rate: number #how much money he or she wants for the job
+
+
+        system_roles: ?
+
+        design_time_roles: ?
+
+      custom_types: ?
+
+    # rating_scales: ? #рейтинговая система этому тайлу не нужна, так как суд будет начислять очки рейтинга в шкалы юрисдикции, которая владеет этим тайлом суда
+
+      conventions:
+
+        purpose_of_cooperation:
+          type: purpose_of_cooperation
+            props:
+              title: Justice in every trial
+              statement:
+                we: workers of judiciary branch of jurisdiction_with_court_1
+                reason: our pursuit of justice
+                purpose: bring people possibility to resolve their conflicts during transparent, honest and professional court process
+        
+        values:
+        
+          justice:
+            type: value
+            props:
+              title:
+                en: Justice
+                ru: Справедливость
+              flex: immutable
+              statement:
+                en: Justice must prevail in every trial.
+                ru: Справедливость должна восторжествовать в каждом судебном разбирательстве.
+              positions:
+                we:
+                 - Мы полностью согласны и считаем, что главная цель каждого судебного процесса - это справедливое правосудие.
+                fit:
+                 - Жертва получает компенсацию, виновный получает наказание, невиновный получает моральное удовлетворение и компенсацию за потраченное на суд время. #Victim receives compensation, guilty receives punishment, innocent receives moral satisfaction and compensation for a time being spent.
+                enemy: 
+                 - Существуют причины, по которым можно приговорить к наказанию невиновного человека.
+                 - Можно получать выгоду, нарушая закон и нанося вред другим.
+              tags:
+               - честное правосудие #honest trial
+               - прозрачный судебный процесс #transparent judicial process
+                
+          professionalism:
+            type: value
+            props:
+              title:
+                en: Professionalism
+                ru: Профессионализм
+              flex: immutable
+              statement:
+                en: ?
+                ru: Каждый justice specialist в рамках судебного процесса должен ответственно подходить к исполнению профессиональных обязанностей своей роли.
+              positions:
+                we: Мы согласны.
+                fit:
+                 - Справедливый судебный процесс требует усилий, времени, внимания к деталям и честности от всех justice specialists, задейстованных в процессе.
+                unfit: 
+                 - Судебный процесс может совершаться в ускоренном режиме, без должного рассмотрения всех фактов и получения показаний от каждой из сторон.
+                 - Justice специалистом быть легко, можно даже с дивана не вставать.
+                enemy:
+                 - Justice specialist могут использовать процесс в своих интересах, вместо интересов правосудия.
+                 - Justice specialist могут лгать, чтобы добиться выгодных им результатов.
+                 - Justice specialist могут выносить решения, основанные на эмоциях, а не на рациональных аргументах и доводах. #Justice specialist can make decisions based on emotions rather than objective facts and rational arguments.
+              tags:
+               - efforts
+               - skills
+               - knowledge
+               - responsibility
+          
+          decent_reward:
+            type: value
+            props:
+              title:
+                en: Decent reward
+                ru: Достойное вознаграждение
+              flex: flexible #decent reward it's a relative thing and it can be reviewed and updated
+              statement:
+                en: Everyone should receive a decent reward for the time and effort spent on the trial.
+                ru: Каждый человек должен получить достойное вознаграждение за потраченные на судебный процесс время и силы.
+              positions:
+                we:
+                 - Мы согласны с этим.
+                 - Justice специалисты должны получить адекватное денежное вознаграждение за профессиональное выполнение работы.
+                 - Истец и ответчик должны получить профессиональное решение своего вопроса
+                 - Если в рамках судебного процесса выяснилось, что ответчик не виновен, но он пострадал из-за судебного процесса и может это доказать, то он имеет право на компенсацию в том или ином виде.
+                 - Свидетели должны получить благодарность в каком-либо виде.
+                fit:
+                 - Прежде чем justice специалист начнет работать по делу с ним необходимо заключить контракт, в котором указано, какое вознаграждение судебный специалист получит за свое участие в судебном процессе.
+                 - Работа justice специалиста должна быть оплачена в полной мере согласно контракту. #это научит вас искать хороших специалистов, а не заключать конракты с кем попало
+                 - Если работа justice специалиста, по мнению заказчика, была выполнена не качественно, то заказчик волен подать на специалиста в суд.
+                 - Судебный специалист запрашивает за свою работу адекватную и понятную сумму денег.
+                unfit:
+                 - Работа justice специалиста может быть оплачена в меньшем виде или не оплачена вовсе если специалист не качественно выполняет свою работу.
+                enemy:
+                 - Justice специалист может запросить за свои услуги необоснованно большое количество денег. #A justice specialist can request an arbitrarily large amount for his services, because plebs will pay anyway.
+              tags:
+               - bounty
+               - reward
+               - honesty
+               - adequate salary
+          
+          crime_and_punishment_consistency:
+            type: value
+            props:
+              title:
+                en: Consistency of crime and punishment
+                ru: Соответствие преступления и наказания
+              flex: immutable
+              statement:
+                en: The decision rendered in each trial must correspond to the severity of the act committed by the person.
+                ru: Вынесенное в каждом судебном процессе решение должно соответствовать тяжести совершенного человеком деяния.
+              positions:
+                we:
+                 - Мы согласны.
+                fit:
+                 - Судья может выбрать под конкретный проступок конкретное наказание из обширного списка наказаний.
+                 - Никакие преступление не соответствует наказанию в виде смертной казни.
+                enemy:
+                 - За шалости и хулиганство можно наказывать самыми жестокими наказаниями вплоть до расстрела.
+              tags:
+               - commensurate judgement
+               - appropriate punishment
+                
+          legality:
+            type: value
+            props:
+              title:
+                en: Legality of the court, trial and judicial process
+                ru: Законность суда и судебного процесса
+              flex: immutable
+              statement:
+                en: The trial is conducted only in accordance with the laws of the jurisdiction to which this tile of the court belongs.
+                ru: Судебный процесс проводится только в соответствии с законами той юрисдикции, которой принадлежит данный тайл суда.
+              positions:
+                we:
+                 - Мы согласны.
+                fit:
+                 - Правила проведения судебного процесса могут быть изменены по аргументированному запросу людей из других юрисдикций и при полном согласии всех членов судебного процесса.
+                unfit:
+                 - Законы других юрисдикций могут повлиять на суд и судебный процесс.
+                enemy:
+                 - На судебный процесс и его участников можно повлиять при помощи законно обоснованного насилия.
+              tags:
+               - legitimacy
+               - law
+          
+          judicial_independence:
+            type: value
+            props:
+              title:
+                en: Judicial independence
+                ru: Судебная независимость
+              flex: immutable
+              statement:
+                en: Court make judgements independently.
+                ru: Суд соблюдает независимость в своих решениях.
+              positions:
+                we: 
+                 - Мы считаем, что другие люди не должны иметь возможность повлиять на решение суда.
+                fit:
+                 - Единственное, что может ограничить решения суда, это законы и правила юрисдикции, в которой существует суд.
+                unfit:
+                 - Участники судебного процесса могут изменить правила проведения судебного процесса по своему собственному желанию или по желанию или просьбе других людей.
+                enemy:
+                 - Участники судебного процесса и justice специалисты при принятии решений не должны подчиняться чьим-то приказам и реагировать на угрозы от других людей.
+              tags:
+               - independence
+          
+          impartiality:
+            type: value
+            props:
+              title:
+                en: Impartiality
+                ru: Беспристрастность
+              flex: immutable
+              statement:
+                en: Each participant of the judicial process treats the other participants impartially.
+                ru: Каждый участник судебного процесса относится к другим участникам беспристрастно.
+              positions:
+                we:
+                 - Мы согласны.
+                fit:
+                 - Каждый участник судебного процесса должен строить свои рассуждения не на эмоциях, а рационально.
+                 - Каждый justice специалист должен стараться не допускать влияния своих когнитивных искажений на принимаемые решения.
+                 - На рассмотрение дела не могут влиять никакие культурные, расовые, этнические или политические убеждения участников этого процесса.
+                unfit:
+                 - Justice специалист может принимать решения, дискриминирующие определенные группы людей.
+                enemy:
+                 - Каждый участник судебного заседания основывает свою аргументацию о действиях другого участника, аппелируя к культурным, рассовым, этническим, политическим или другим его особенностям.
+              tags:
+               - equity
+               - impartiality
+          
+          incorruptibility:
+            __WE VALUE__ неподкупность. __WE CLAIM__ что, суд должен быть неподкупным на всех уровнях и этапах его работы, а единственное вознаграждение, которое может получить justice специалист - это то, которое указано в контракте __WILL NOT TOLERATE OTHER OPINIONS SUCH AS__ судебный процесс может подвергнуться коррупции и существуют причины, которые могут это оправдать.
+            
+          safety:
+            type: value
+            props:
+              title:
+                en: Safety
+                ru: Безопасность
+              flex: immutable
+              statement:
+                en: Every participant of court and trial should not be prosecuted in any way for participating in the judicial process.
+                ru: Каждый участник судебного процесса не должен быть преследуем никаким образом за участие в судебном процессе.
+              positions:
+                we:
+                 - Мы согласны.
+                fit:
+                 - Если в течении судебного процесса становится известно, что один из его участников совершил преступление, которое не относится к рассматриваемому делу, то он может быть привлечен к ответственности в рамках другого судебного заседания.
+                enemy:
+                 - Можно оскорблять, стигматизировать, дискриминировать или применять насилие к человеку за участие в судебном процессе.
+                 - Justice специалист может использовать свое судебное положение для нанесения вреда другому человеку.
+              tags:
+               - peace
+               - immunity
+
+          minimization_of_damage: #главная ценность и желание ответчика - минимизировать ущерб, полученный от судебного решения, даже если он виновен, поэтому эта ценность конфликтует с другими ценностями тайла
+            type: value
+            props:
+              title:
+                en: Minimization of damage
+                ru: Минимизация ущерба
+              flex: immutable
+              statement:
+                en: The defendant makes every effort to reduce the damage from the court decision, even if he is guilty.
+                ru: Ответчик всячески стремится к тому, чтобы уменьшить ущерб от судебного решения, даже в том случае если он виновен.
+              positions:
+                we: Мы считаем, что стремление ответчика к минимизации ущерба не должно повлиять на качество судебных процессов.
+                fit:
+                 - Ответчик может стремиться уменьшить ущерб от судебного заседания против него, если использует для этого законнные средства и инструменты.
+                enemy:
+                 - Для минимизации вреда от судебного заседания ответчик может пойти на абсолютно любые меры.
+              tags:
+               - damage control
+        
+        rules:
+
+          target_rules:
+            
+            judgement_contradicts_value_tier1:
+              type: rule
+              props:
+                type: event
+                props:
+                  title: Judgement contradicts values 
+                  description: Судья принимает решение, которое кому-то из ролей тайла кажется противоречащим или не соответствующим описанным в тайле ценностям.
+                  content:
+                    text: JUDGE made judgement which contradicts with VALUE_NAME of this tile for the first time
+                    media: #files with evidence
+                    link: !href #link to the judgement
+                  confirmation_method:
+                    court:
+                     - SUPREME_COURT
+                  binary: yes
+
+              event_confirmed: Judgement contradicts values
+              event_modality: !(may)
+              when:
+               - always
+              presence_actions:
+                enforcer: Supreme_judge@SUPREME_COURT
+                on_whom: Judge
+                orders: 
+                  -  warn JUDGE to not to do it in future
+                  # - if SUPREME_JUDGE confirms this is third judgements of the JUDGE which contradicts with VALUE_NAME then he has to release JUDGE from his role
+              flex: immutable
+              value: Justice
+              tags:
+               - values
+
+            judgement_contradicts_value_tier2:
+              type: rule
+              props:
+                type: event
+                props:
+                  title: Judgement contradicts values second time
+                  description: Судья во второй раз принимает решение, которое кому-то из ролей тайла кажется противоречащим или не соответствующим описанным в тайле ценностям.
+                  content:
+                    text: JUDGE made judgement which contradicts with VALUE_NAME of this tile for the second time
+                    media: #files with evidence
+                    link: !href #link to the judgement
+                  confirmation_method:
+                    court:
+                     - SUPREME_COURT
+                  binary: yes
+
+              event_confirmed: Judgement contradicts values second time
+              event_modality: !(may)
+              when:
+               - always
+              presence_actions:
+                enforcer: Supreme_judge@SUPREME_COURT
+                on_whom: Judge
+                orders: 
+                  -  make a last warn to JUDGE
+                rating:
+                  scale: JWC1_negative@jurisdiction_with_court
+                  amount: 500
+              flex: immutable
+              value: Justice
+              tags:
+               - values
+
+            judgement_contradicts_value_tier3:
+              type: rule
+              props:
+                type: event
+                props:
+                  title: Judgement contradicts values third time
+                  description: Судья в третий раз принимает решение, которое кому-то из ролей тайла кажется противоречащим или не соответствующим описанным в тайле ценностям.
+                  content:
+                    text: JUDGE made judgement which contradicts with VALUE_NAME of this tile for the third time
+                    media: #files with evidence
+                    link: !href #link to the judgement
+                  confirmation_method:
+                    court:
+                     - SUPREME_COURT
+                  binary: yes
+
+              event_confirmed: Judgement contradicts values third time
+              event_modality: !(may)
+              when:
+               - always
+              presence_actions:
+                enforcer: Supreme_judge@SUPREME_COURT
+                on_whom: Judge
+                orders: 
+                 - release JUDGE from his role
+                rating:
+                  scale: JWC1_negative@jurisdiction_with_court
+                  amount: 1000
+              flex: immutable
+              value: Justice
+              tags:
+               - values
+
+            anyone_tried_to_bribe_a_justice_specialist:
+              type: rule
+              props:
+                type: event
+                props:
+                  title: Anyone tried to bribe a justice specialist
+                  description: Any role tried to bribe a justice specialist to have some special opinion or judgement from
+                  content:
+                    text: ANY_ROLE = BRIBER tried to bribe JUDGE or LAWYER or EXPERT
+                    media: 
+                    link: !href
+                  confirmation_method: 
+                    court:
+                     - SUPREME_COURT
+                  binary: yes
+
+              event_confirmed: Anyone tried to bribe a justice specialist
+              event_modality: !(may)
+              when:
+                - always
+              presence_actions:
+                enforcer: Supreme_judge@SUPREME_COURT
+                on_whom: Judge
+                orders:
+                 - release JUDGE from his role
+                rating:
+                  scale: JWC1_negative@jurisdiction_with_court
+                  amount: 1000
+              presence_actions:
+                enforcer: system
+                on_whom: BRIBER
+                orders:
+                 - slash the stake for case
+                 - finish the trial ahead of schedule
+                rating:
+                  scale: JWC1_negative@jurisdiction_with_court
+                  amount: 1000
+
+              flex: immutable
+              value: incorruptibility
+              tags:
+               - incorruptibility
+               - anti-bribery
+
+          update_rules: ?

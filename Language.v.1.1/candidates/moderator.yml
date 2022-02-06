@@ -1,0 +1,56 @@
+ type: role
+  props:
+    title: Moderator
+    description: Moderator is person in charge of information and content regulation on YJ Platform
+    tags: [moderator,rules,content_regulation,moderation,order] 
+
+    active_stage_bdi:
+      beliefs: [@Humanity.values;we,Order;we,@SomeTile.values] #@SomeTile.values - если модератор какой нить Юрисдикции\Тайла
+      desire: [processClaim] 
+      intention: string #2DO
+
+    life_cycle_stages: 
+      type: life_cycle_stage
+      title: string 
+        - invite 
+          rights: 
+            @Humanity.Candidate.life_cycle_stage.invite 
+            #надо сделать дефолтную роль типа кандидат на что то и 
+            # наследоваться от неё, ибо эти поля чаще всего будут дефолтными:
+            # - _acceptRole 
+            # - _declineRole 
+        - active
+          rights:
+            - markContent # Пометить контент, как спорный _createEvent + непосредственно экшн по регуляции контента
+            - deleteContent # чейн из _createEvent+_giveEvidence+_evaluateEvent
+            - acceptClaim #для экномонии предлагаю все бинарные экшены типа accept/decline пихать в один экшн с True\False аршументом- acceptClaim(False) = decline
+            - processClaim #wrapped _evaluateEvent; рассматривает жалобу пользователя
+            - banUser # wrapped _removeFromRole (актуально для тайлов)
+            - applyPostingRestrictions
+            #чейн _removeFromRole+_applyToRole - есть будут системные роли, в правах
+            #которых есть постинг и прочее - то модератор может пидорнуть с такой 
+            #роли и назначить на роль без права постинга (актуально для тайлов)
+            - _addRating
+            @Humanity.Human.life_cycle_stage.active #отсюда берем экшн - свалить с роли, мб что то ещё из дефлотных
+        - ex 
+          rights:
+            #...
+
+    profile_form:
+      params: [{key:value}] # what tile wants to store in user's profile about user linked to this role
+    
+    role_requirements:
+      modality: must_not
+      other_roles:
+        role_tags:
+          - rights_violator
+          - restricted_content_poster
+          - criminal
+          @BasicCourt.Criminal.tags #опять же предлагаю описать некие стандартные теги для некоего стандартного преступника
+
+    application_form: # if any
+      params: [{key:value}]
+
+
+
+

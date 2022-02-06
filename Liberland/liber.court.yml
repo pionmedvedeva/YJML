@@ -1,0 +1,457 @@
+Liberland_civil_court:
+
+  title: Civil Court
+  description: The tile describes a social attitude like "Judgment", in which people can achieve justice if they follow the rules of this tile. With the help of this tile, people will be able to protect their rights and restore the violated justice through recourse to the court. According to the court's decision, people will be able to receive compensation and punishment.
+
+  tile:
+
+    functional:
+    
+      purpose_of_tile: 
+          title: Fair justice between citizens of Liberland
+          description: The tile is designed to provide justice, restore justice and deal with difficult or conflict situations, in case the players could not come to an agreement by other means. The tile determines the degree of righteousness and guilt of the players who applied to the court.
+          
+      benefits_to_supertile_secretariat_of_the_Judiciary:
+          title: Reports
+          supertile: secretariat_of_the_Judiciary
+          benefit: Reports about work of civil court
+
+      benefits_to_judges_1: 
+          title: Financial rewards
+          player: civil_judge
+
+      benefits_to_judges_2: 
+          title: Authority
+          player: civil_judge
+          
+      benefits_to_plaintiffs: 
+          title: Fair judgements
+          player: plaintiff
+          
+      benefits_to_defendants: 
+          title: Fair judgements
+          player: defendant
+          
+      benefits_to_lawyers: 
+          title: Financial rewards
+          player: lawyer
+          
+      benefits_to_experts: 
+          title: Financial rewards
+          player: expert
+
+      benefits_to_witnesses_1: 
+          title: Postitive rating
+          player: witness
+          
+      benefits_to_witnesses_1: 
+          title: Gratitude
+          player: witness
+
+    actions:
+        _acceptRole 
+        _declineRole 
+        _callForWitness #ask witness to participate in trial
+        _acceptWitnessCall #judge agree, and witness can participate
+        _declineWitnessCall #judge decline and witness can't participate
+        _makeJudgment #judge make his|her desicion
+        _voteForJudgment #when judges more than one
+        _removeFromRole #allows judge to release human from role
+        _voteForJudgeChange #for removing the judge from trial
+        _addRating #judge can add rating
+        _fileCharge #for plaintiff
+        _receiveJudgment #when judge made a judgement plaintiff, defendant and other receives a decision
+        _summonLawyer #for any person in trial, except judge
+        _suggestSettlement #suggest peace agreement, which maybe fill fit for plaintiff and defendant both
+        _acceptSettlement #accept peace agreement
+        _requestCompensation #plaintiff and defendant can do that
+        _fileOpinion # through the action lawyer, witness and expert offer his opinion on case testimonies
+        _satisfyContractTerms #for all, who made a contract for a participation in trial
+        
+        
+    constructive:
+
+      roles:
+          
+          civil_judge:
+              title: Civil judge
+              description: Justice specialist, who determines the punishment for the one whose guilt has been proven.
+              tags: 
+                - justice
+                - judge
+                - judgement
+                - wig  # :)
+                
+              active_stage_bdi:
+                believe_in_values: 
+                  - justice
+                  - crime_and_punishment_consistency
+                desire:  _makeJudgment 
+                intention: Listens as carefully as possible to the testimony of all participants in the trial, analyzes these testimonies and other information provided, and then makes the most fair decision on the issue under consideration.
+                
+              life_cycle_stages: 
+                  - invite 
+                    rights: 
+                      - _acceptRole
+                      - _declineRole 
+                  - active
+                    rights: 
+                      - _acceptWitnessCall
+                      - _declineWitnessCall
+                      - _makeJudgment
+                      - _voteForJudgment
+                      - _removeFromRole
+                      - _addRating 
+                      
+              civil_judge_role_requirements_1:
+                modality: must_not
+                other_roles:
+                  tile_id: this_tile
+                  role_name: plaintiff, defendant, lawyer, witness
+                    life_cycle_stage: active
+                    
+              civil_judge_role_requirements_2:
+                modality: must_not
+                other_roles:
+                  tile_id: Public_Administration
+                  role_name: any
+                    life_cycle_stage: active
+                foundation: §VI.5. The Judges of the Courts of the Free Republic of Liberland shall be independent and shall not be removable by any other branch of the Public Administration.
+           
+              civil_judge_role_requirements_3:
+                modality: must_not
+                other_roles:
+                  role_tags: {
+                    - uncompensated damage
+                    - violator
+                    - liar }
+
+          plaintiff:
+              title: Plaintiff
+              description: A person in whose interests the trial took place.
+              tags: victim 
+
+              active_stage_bdi:
+                believe_in_values: 
+                  - justice
+                  - crime_and_punishment_consistency
+                desire:  _receiveJudgment 
+                intention: Honestly provides all the requested information and evidence that confirms his correctness and prove that his claim is true. Does not mislead the court under any pretext. Can interact with the court through his legal representative. Attracts a lawyer to protect his interests, if desired.
+
+              life_cycle_stages: 
+                  - invite 
+                    rights: 
+                      - _acceptRole
+                      - _declineRole 
+                  - active
+                    rights: 
+                      - _fileCharge
+                      - _requestCompensation
+                      - _summonLawyer
+                      - _callForWitness
+                      - _suggestSettlement
+                      - _acceptSettlement
+                      - _receiveJudgment
+    
+              plaintiff_role_requirements:
+                modality: must_not
+                other_roles:
+                  tile_id: this_tile
+                  role_name: civil_judge, defendant, lawyer, witness, expert
+                    life_cycle_stage: active
+
+
+          defendant:
+              title: Defendant
+              description: A person against whom trial are pending.
+              tags: suspect 
+
+              active_stage_bdi:
+                believe_in_values: 
+                  - justice
+                  - professionalism
+                  - crime_and_punishment_consistency
+                desire: 
+                  - _receiveJudgment
+                intention: Defend your self by honest providing all the requested information and evidence that confirms his correctness. Does not mislead the court under any pretext. Can interact with the court through his legal representative. Attracts a lawyer to protect his interests, if desired.
+
+              life_cycle_stages: 
+                type: life_cycle_stage
+                title: string 
+                  - invite 
+                    rights: 
+                      - _acceptRole
+                      - _declineRole 
+                  - active
+                    rights: 
+                      - _requestCompensation
+                      - _summonLawyer
+                      - _callForWitness
+                      - _suggestSettlement
+                      - _acceptSettlement
+                      - _receiveJudgment
+    
+              defendant_role_requirements:
+                modality: must_not
+                other_roles:
+                  tile_id: this_tile
+                  role_name: civil_judge, plaintiff, lawyer, witness, expert
+                    life_cycle_stage: active
+
+          lawyer:
+              title: Lawyer
+              description: Justice specialist, who defends the position of the participant in the court hearing, with whom he has a contract.
+              tags: 
+                - legal
+                - protection 
+
+              active_stage_bdi:
+                believe_in_values: 
+                  - legality
+                  - judicial_independence
+                  - objectivity
+                desire:  _satisfyContractTerms 
+                intention: With the help of knowledge in the field of jurisprudence, helps to defend the participant of the court hearing his point of view. Strives to achieve the completion of the process as soon as possible in favor of the participant whose interests protects.
+
+              life_cycle_stages: 
+                type: life_cycle_stage
+                title: string 
+                  - invite 
+                    rights: 
+                      - _acceptRole
+                      - _declineRole 
+                  - active
+                    rights: 
+                      - _fileOpinion
+                      - _callForWitness
+                      - _suggestSettlement
+                      - _receiveJudgment
+                      - _satisfyContractTerms
+    
+              lawyer_role_requirements_1:
+                modality: must_not
+                other_roles:
+                  tile_id: this_tile
+                  role_name: civil_judge, plaintiff, defendant, witness, expert
+                    life_cycle_stage: active
+                    
+              lawyer_role_requirements_2:
+                modality: must_not
+                other_roles:
+                  role_tags: {liar}
+                
+          witness:
+              title: Witness
+              description: A person who presents his position on the issue discussed at the trial.
+              tags: 
+                - opinion
+                - evidence 
+
+              active_stage_bdi:
+                believe_in_values: 
+                  - safety
+                  - decent_reward
+                desire: 
+                  - _fileOpinion
+                intention: With the help of available information, confirms or not confirms the testimony of a participant in the trial.
+
+              life_cycle_stages: 
+                type: life_cycle_stage
+                title: string 
+                  - invite 
+                    rights: 
+                      - _acceptRole
+                      - _declineRole 
+                  - active
+                    rights: 
+                      - _fileOpinion
+                      - _suggestSettlement
+                      - _receiveJudgment
+    
+              witness_role_requirements:
+                modality: must_not
+                other_roles:
+                  tile_id: this_tile
+                  role_name: civil_judge, plaintiff, defendant, lawyer, expert
+                    life_cycle_stage: active
+                
+          expert:
+              title: Expert
+              description: A person who presents a position supported by his expertise regarding the issue discussed at the trial.
+              tags: 
+                - opinion
+                - evidence
+                - expertise 
+
+              active_stage_bdi:
+                believe_in_values: 
+                  - professionalism
+                  - decent_reward
+                desire:  _satisfyContractTerms  
+                intention: With the help of expertise in a certain area, confirms or not the testimony of a participant in the trial.
+
+              life_cycle_stages: 
+                type: life_cycle_stage
+                title: string 
+                  - invite 
+                    rights: 
+                      - _acceptRole
+                      - _declineRole 
+                  - active
+                    rights: 
+                      - _fileOpinion
+                      - _suggestSettlement
+                      - _receiveJudgment
+                      - _satisfyContractTerms
+                      
+              expert_role_requirements:
+                modality: must_not
+                other_roles:
+                  tile_id: this_tile
+                  role_name: civil_judge, plaintiff, defendant, lawyer
+                    life_cycle_stage: active       
+
+      conventions:
+
+        purpose_of_cooperation:
+          type: purpose_of_cooperation
+            props:
+              title: Justice in every civil court trial
+              statement:
+                we: YJ developers creators of this tile
+                reason: in our pursuit of justice
+                purpose: bring people of Liberland possibility to resolve their conflicts during transparent, honest and professional court process
+        
+        values:
+        
+          justice:
+              title: Justice
+              flex: immutable
+              statement: 
+                - Justice must prevail in every trial.
+                - Victim receives compensation, guilty receives punishment, innocent receives moral satisfaction and compensation for a time being spent.
+                - There is no reason why an innocent person can be sentenced to punishment. 
+              tags: 
+                - honest trial
+                - transparent judicial process 
+                
+          professionalism:
+              title: Professionalism
+              flex: immutable
+              statement: 
+                - Each participant in the judicial process must responsibly approach the performance of his role. 
+                - Fair trial requires efforts, time, attention to details and honesty from all involved.
+                - Participants in the process cannot use the process to their advantage, instead of the interests of justice.
+                - Participants in the process cannot lie in order to achieve results that are beneficial to them. 
+                - Justice specialist can make decisions based on emotions rather than objective facts and rational arguments.
+                - A lawyer cannot defend a person in the belief that that person is guilty.
+              tags: 
+                - efforts
+                - skills
+                - knowledge
+                - responsibility
+          
+          decent_reward:
+              title: Decent reward
+              flex: flexible #decent reward it's a relative thing and it can be reviewed and updated
+              statement: 
+                - Everyone should receive a decent reward for the time and effort spent on the trial.
+                - Judges, lawyers and experts should receive adequate monetary remuneration for the professional performance of work.
+                - The plaintiff and the defendant should receive a professional solution to their issue.
+                - If in the framework of the trial it turned out that the defendant is not guilty, but he suffered because of the trial and can prove it, then he is entitled to compensation in one form or another.
+                - Witnesses should receive some form of gratitude
+                - Before a justice specialist (judge, lawyer or expert) begins to work on the case, it is necessary to conclude a contract in which it is indicated that the justice specialist will receive for his participation in the trial.
+                - A justice specialist can't request an arbitrarily large amount for his services, because plebs will pay anyway. 
+              tags: 
+                - bounty
+                - reward
+                - honesty
+                - adequate compensation
+          
+          crime_and_punishment_consistency:
+              title: Consistency of crime and punishment
+              flex: immutable
+              statement: 
+                - The decision rendered in each trial must correspond to the severity of the act committed by the person.
+                - pranks and hooliganism can not be punished with the most cruel punishments (up to shooting) 
+              tags: 
+                - commensurate judgement
+                - fair punishment 
+                
+          legality:
+              title: Legality of the court, trial and judicial process
+              flex: immutable
+              statement: 
+                - The judicial process corresponds to and is conducted according to the laws of the jurisdiction in which the court exists.
+                - The rules of the trial can be changed at the reasoned request of people from other jurisdictions and with the full consent of all members of the judicial process.
+                - The judicial process and its participants cannot be influenced by legally justified violence. 
+              tags: 
+                - legitimacy
+                - law 
+          
+          judicial_independence:
+              title: Judicial independence
+              flex: immutable
+              statement:  
+                - Court make judgements independently.
+                - The only thing that can limit the decisions of the court is the laws and regulations established by the Secretariat of the Judiciary
+                - Litigants and litigators must not to obey other people's orders 
+              tags: independence
+              foundation: §VI.5. The Judges of the Courts of the Free Republic of Liberland shall be independent and shall not be removable by any other branch of the Public Administration.
+          
+          objectivity:
+              title: objectivity
+              flex: immutable
+              statement: 
+                - Each participant of the judicial process treats the other participants objectively and impartially.
+                - A justice specialist cannot treat people who have committed certain acts more or less favorably.
+                - Each participant in the court hearing may not base his testimony and arguments about the actions of another participant by pointing to cultural, racial, ethnic, political and other characteristics of him. 
+              tags: 
+                - equity
+                - impartiality
+          
+          incorruptibility:
+          #here is a short form of value
+            __WE VALUE__ incorruptibility. __WE CLAIM__ that the court must be incorruptible at all levels and stages of its work __WILL NOT TOLERATE OTHER OPINIONS SUCH AS__ the trial may be subject to corruption and there are reasons that may justify it.
+            
+          safety:
+              title: Safety
+              flex: immutable
+              statement: 
+                - Every participant of court and trial should not be prosecuted in any way for participating in the judicial process.
+                - A participant in a lawsuit can himself become a defendant in a new trial, if in this trial he commits or reveals that he committed something unacceptable earlier and another person wants to sue him.
+                - You can not insult, stigmatize, discriminate or use violence against a person for participating in the judicial process. 
+              tags: 
+                - serenity
+                - peace
+                - immunity
+        
+        rules:
+        
+          fire_agent_of_law_enforcement_if_he_intervine_court:
+            type: rule
+            props:
+              type: event
+              props:
+                title: Agent of Law Enforcement enters the premises of the court
+                description: Agent of Law Enforcement enters the premises of the court without consent from the Secretariat of the Judiciary
+                content:
+                  media: evidence files
+                confirmation_method: 
+                  specific_role_report: civil_judge
+    
+               event_confirmed: Agent of Law Enforcement enters the premises of the court
+               event_modality: may not
+               exception: 
+                 received_permission_from_role: 
+                 role_name: supreme_secretary@Secretariat_of_the_Judiciary #role_name@tile_id
+               when:
+                 - always
+               presence_actions:
+                 enforcer: system
+                   on_whom: agent_of_law_enforcement@Public_Administration #role_name@tile_id
+                   orders: Release from the role
+               flex: immutable
+               foundation: §VI.4(3) No Agent of Law Enforcement shall enter the premises of any Court of the Free Republic of Liberland unless with the express and informed consent of the Secretariat of the Judiciary or pursuant to the Supreme Warrant.
+               
+          

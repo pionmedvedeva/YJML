@@ -1,0 +1,40 @@
+entity:
+
+  title: string
+  description: string
+
+  tile:
+
+    functional: # what will change in reality if tile will be palyed
+
+    terms:
+
+    actions:
+
+    constructive:
+
+      subtiles: # sub-tiles are listed and relations are specified
+
+      roles:
+
+        target_roles:
+
+        system_roles:
+
+        design_time_roles:
+
+      custom_types:
+
+      rating_scales: 
+
+      conventions:
+
+        purpose_of_cooperation:
+        
+        values:
+        
+        rules:
+
+          target_rules:
+
+          update_rules:

@@ -1,0 +1,11 @@
+type: rating_scale
+props:
+	title: STRING
+  scale_id: SCALE_ID
+  quality: string # what general quality is evaluated by this scale (ontology will be presented later on)
+  evaluator: [ROLE]
+  evaluated: [ROLE]
+  scale_min: NUMBER # -100 <= min
+  scale_max: NUMBER # min < max <=100 # numbers may differ
+	step: NUMBER # 0.001 < step <= 1 & (max - min) / step == integer
+  tags: [string]

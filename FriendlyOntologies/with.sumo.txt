@@ -1,0 +1,100 @@
+It would be good if you could work with our other Russian speakers, to translate some of the pages we plan to use for the ActiveInference Ontology project!
+Immediately following are some of the SUMO Classes and relations you can find in columns AK-AQ of the GoogleSheet at:
+https://docs.google.com/spreadsheets/d/17ht7lrHTYwvNMWrGdcoJKMpBPb6jSd8ZH3kmhZDREOc/edit#gid=282910400
+Class: PsychologicalAttribute, IntentionalProcess, 
+relations:  abstractCounterpart, subclass
+
+Following are some SUMO relations that may be related to YJML caseRoles
+SUMO does not have (official) translations into any Slavic language.
+
+** eventLocated **
+"This relation inherits its case-filler behavior from its super-relation, eventPartlyLocated - so it's a relation between a Process and an Object."
+https://sigma.ontologyportal.org:8443/sigma/Browse.jsp?lang=EnglishLanguage&flang=SUO-KIF&kb=SUMO&term=eventLocated
+"(eventLocated ?PROC ?OBJ) means that the entire Process ?PROC is located on Object ?OBJ, meaning that all subProcess of ?PROC is located on ?OBJ."
+(instance eventLocated CaseRole)	Merge.kif 3988-3988	event located is an instance of case role
+(instance eventLocated TotalValuedRelation)	Merge.kif 3989-3989	event located is an instance of total valued relation
+(subrelation eventLocated eventPartlyLocated)	Merge.kif 3987-3987	event located is a subrelation of event partly located
+
+
+** eventPartlyLocated **
+This is a relation between a Process and an Object.
+https://sigma.ontologyportal.org:8443/sigma/Browse.jsp?lang=EnglishLanguage&flang=SUO-KIF&kb=SUMO&term=eventPartlyLocated
+"(eventPartlyLocated ?PROC ?OBJ) means that some subProcess of Process ?PROC is located in Object ?OBJ."
+(domain eventPartlyLocated 1 Process)	Merge.kif 3964-3964	The number 1 argument of event partly located is an instance of process
+(domain eventPartlyLocated 2 Object)	Merge.kif 3965-3965	The number 2 argument of event partly located is an instance of object
+(instance eventPartlyLocated CaseRole)	Merge.kif 3957-3957	event partly located is an instance of case role
+(instance eventPartlyLocated PartialValuedRelation)	Merge.kif 3958-3958	event partly located is an instance of partial valued relation
+(subrelation eventPartlyLocated involvedInEvent)	Merge.kif 3985-3985	event partly located is a subrelation of involved in event
+
+
+** involvedInEvent **
+This is a relation between a Process and an Object.
+https://sigma.ontologyportal.org:8443/sigma/Browse.jsp?lang=EnglishLanguage&flang=SUO-KIF&kb=SUMO&term=involvedInEvent
+"(involvedInEvent ?EVENT ?THING) means that in the Process ?EVENT, the Entity ?THING plays some CaseRole."
+(domain involvedInEvent 1 Process)	Merge.kif 2326-2326	The number 1 argument of involved in event is an instance of process
+(domain involvedInEvent 2 Entity)	Merge.kif 2327-2327	The number 2 argument of involved in event is an instance of entity
+(instance involvedInEvent AsymmetricRelation)	Merge.kif 2325-2325	involved in event is an instance of asymmetric relation
+(instance involvedInEvent BinaryPredicate)	Merge.kif 2324-2324	involved in event is an instance of binary predicate
+
+subrelations of 'involvedInEvent:' destination, direction, eventPartlyLocated, experiencer, moves, origin, patient
+
+
+** instance **
+instance is a relation of an Entity to a Class. (Yes, a relation can be "recursively defined," because it's implemented separate from the definition.)
+https://sigma.ontologyportal.org:8443/sigma/Browse.jsp?kb=SUMO&lang=EnglishLanguage&flang=SUO-KIF&term=instance
+"An object is an instance of a Class if it is included in that Class. An individual may be an instance of many classes, some of which may be subclasses of others. Thus, there is no assumption in the meaning of instance about specificity or uniqueness."
+(domain instance 1 Entity)	Merge.kif 81-81	The number 1 argument of instance is an instance of entity
+(domain instance 2 Class)	Merge.kif 82-82	The number 2 argument of instance is an instance of class
+(instance instance BinaryPredicate)	Merge.kif 80-80	instance is an instance of binary predicate
+(relatedInternalConcept member instance)	Merge.kif 1207-1207	member is internally related to instance
+(subrelation element instance)	Merge.kif 5180-5180	element is a subrelation of instance
+(subrelation immediateInstance instance)	Merge.kif 89-89	immediate instance is a subrelation of instance
+
+
+** relatedEvent **
+relatedEvent relates two Processes.
+"(relatedEvent ?EVENT1 ?EVENT2) means that the Process ?EVENT1 is related to the Process ?EVENT2. The relationship is between separate individual events, not events and their subprocesses. On the other hand, two subProcesses of the same overarching event may be relatedEvents. The argument order does not imply temporal ordering."
+https://sigma.ontologyportal.org:8443/sigma/Browse.jsp?lang=EnglishLanguage&flang=SUO-KIF&kb=SUMO&term=relatedEvent
+(domain relatedEvent 1 Process)	Merge.kif 3645-3645	The number 1 argument of related event is an instance of process
+(domain relatedEvent 2 Process)	Merge.kif 3646-3646	The number 2 argument of related event is an instance of process
+(instance relatedEvent BinaryPredicate)	Merge.kif 3643-3643	related event is an instance of binary predicate
+(instance relatedEvent SymmetricRelation)	Merge.kif 3644-3644	related event is an instance of symmetric relation
+
+Logical implications:
+* If a process is a subprocess of another process and a third process is a subprocess of the other process,
+   then the third process is a related event of the process
+* If a process causes another process,
+   then the other process is a related event of the process
+
+
+** realization **
+'realizes' is a special case of  'represents.'
+https://sigma.ontologyportal.org:8443/sigma/Browse.jsp?lang=EnglishLanguage&flang=SUO-KIF&kb=SUMO&term=realization
+"A subrelation of represents. (realization ?PROCESS ?PROP) means that ?PROCESS is a Process which expresses the content of ?PROP. Examples include a particular musical performance, which realizes the content of a musical score, or the reading of a poem."
+(instance realization AsymmetricRelation)	Merge.kif 4433-4433	realization is an instance of asymmetric relation
+(relatedInternalConcept realization containsInformation)	Merge.kif 4437-4437	realization is internally related to contains information
+(relatedInternalConcept realization equivalentContentInstance)	Merge.kif 4436-4436	realization is internally related to equivalent content instance
+(subrelation realization represents)	Merge.kif 4432-4432	realization is a subrelation of represents
+
+
+** represents **
+
+https://sigma.ontologyportal.org:8443/sigma/Browse.jsp?lang=EnglishLanguage&flang=SUO-KIF&kb=SUMO&term=represents
+"A very general semiotics Predicate. (represents ?THING ?ENTITY) means that ?THING in some way indicates, expresses, connotes, pictures, describes, etc. ?ENTITY. The Predicates containsInformation and realization are subrelations of represents. Note that represents is a subrelation of refers, since something can represent something else only if it refers to this other thing. See the documentation string for names."
+(instance represents BinaryPredicate)	Merge.kif 4301-4301	represents is an instance of binary predicate
+(subrelation represents refers)	Merge.kif 4300-4300	represents is a subrelation of refers
+
+Subrelations of 'represents:' abstractCounterpart, anthem, cardCode, conforms, containsInformation, hardwareType, implementsProtocol, pin, productBrand, productModel, realization, record
+
+
+
+
+
+
+
+
+
+
+
+
+

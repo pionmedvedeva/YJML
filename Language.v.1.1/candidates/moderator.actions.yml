@@ -1,0 +1,139 @@
+  banUser:
+    check:
+      - USER_HAS_ROLE:
+          user: self
+          role: ThisTile@Moderator
+        error: You are not Moderator of this Tile
+      - USER_HAS_ROLE:
+          user: USER_ID
+          role: ROLE_NAME@TILE_ID
+        error: User doesnt have this role
+    args:
+      role: ROLE_NAME
+      tile_id: TILE_ID
+      actor: USER_ID
+      rule: RULE_ID
+    code:
+      - _removeFromRole:
+          args: [args]
+      - _createEvent:
+          title: User kicked from %ROLE_NAME% by %MODERATOR% because %REASON%
+          description: !string 
+          reason: [!string | RULE_ID] # у нас че есть такое поле? че за ивент? или мы нотификейшен такой шлем?
+          witnesses: [self|user]
+    return:
+      role_status: free
+      new_event: EVENT
+
+  markContent:
+    check:
+      - USER_HAS_ROLE:
+          user: self
+          role: ThisTile@Moderator
+        error: You are not Moderator of this Tile
+    args:
+      - content: [MEDIA_ID]
+      - reported_by: [self|user]
+    code:
+      - _markContent:
+          media: [MEDIA_ID]
+      - _createEvent:
+          title: Content marked as %REASON% by %MODERATOR% 
+          description: !string 
+          reason: [!string | RULE_ID]
+          media: [MEDIA_ID]
+          witnesses: [self|user]
+        return:
+          new_event: EVENT
+
+   deleteContent:
+    check:
+      - USER_HAS_ROLE:
+          user: self
+          role: ThisTile@Moderator
+        error: You are not Moderator of this Tile
+    args:
+      - content: [MEDIA_ID]
+      - reported_by: [self|user]
+      - rule: [RULE_ID]
+      - target_user: user
+    code:
+      - _deleteContent:
+          media: [MEDIA_ID]
+      - _createEvent:
+          title: Content deleted as %REASON% by %MODERATOR% 
+          description: !string 
+          reason: [RULE_ID]
+          media: [MEDIA_ID]
+          witnesses: [self|user]
+        return:
+          new_event: EVENT
+      # - _giveEvidence:   #Cледуюшие два экшена опциональные, кмк это более подробная форма
+      #     event_id: EVENT
+      #     witness: True
+      #     evidence_type: firsthand
+      #     evidence_side: pro
+      #     evidence:  
+      #   return:
+      #     event: EVENT
+      # - _evaluateEvent:
+      #     event_id: EVENT
+      #     tile_id: 
+      #     rule: RULE_ID
+      #     actor: target_user
+      #     scale:
+      #       scale_id: [Humanity.Order || SomeRandomTile.SomeRandomScale] 
+      #       scale_title: [Humanity||SomeRandomTile] 
+      #       amount: [defaultHumanityAmmount||someRandomTileAmmount]
+        # return:
+        #   rating_event: RATING_EVENT    
+
+  processClaim:
+    check:
+      - USER_HAS_ROLE:
+          user: self
+          role: ThisTile@Moderator
+        error: You are not Moderator of this Tile
+    args:
+      event_id: EVENT_ID
+      tile_id: TILE_ID
+      rule: RULE_NAME
+      actor: USER_ID 
+      scale:
+        scale_id: SCALE_ID
+        scale_title: TITLE
+        amount: amount
+    code:
+      - _evaluateEvent:
+        args: [args]
+    return:
+      rating_event: RATING_EVENT
+      
+  applyPostingRestrictions:  
+    check:
+      - USER_HAS_ROLE:
+          user: self
+          role: ThisTile@Moderator
+        error: You are not Moderator of this Tile
+      - USER_HAS_ROLE:
+          user: USER_ID
+          role: ROLE_NAME@TILE_ID
+        error: User doesnt have this role
+    args:
+      role: ROLE_NAME
+      tile_id: TILE_ID
+      actor: USER_ID
+      rule: RULE_ID
+      duration: [dd:hh:mm:ss]
+    code:
+      - _removeFromRole:   #снять с роли чувак_который_может_постить
+          args: [args]
+      - _acceptRole:      #поставить на роль чувак_который_НЕ_может_постить
+          args: [args]
+      - _createEvent:
+          title: %USER% got posting restrictions for %duration% by %MODERATOR% because %REASON%
+          description: !string 
+          reason: [!string | RULE_ID]
+          witnesses: [self|user]
+    return:
+      new_event: EVENT

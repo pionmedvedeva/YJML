@@ -1,0 +1,10 @@
+terms: 
+# full
+type: term 
+props: 
+  title: String! 
+  description: String! 
+  tags: [string]
+  
+## natural with keywords: 
+something __IS DEFINED__ as something something

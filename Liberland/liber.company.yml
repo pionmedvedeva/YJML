@@ -1,0 +1,102 @@
+    constructive:
+
+      subtiles: 
+        subtile_name: Shareholder Meeting
+        ...
+		
+      roles:
+
+        target_roles:
+	
+          type: role
+              props:
+                title: Shareholder
+                description: Shareholder owns LiberlandCompany shares
+                life_cycle_stages: 
+                  type: life_cycle_stage
+                    - active*shares
+                    rights:
+                      receiveDividend 
+                      transferShares
+                      sellShares
+                   - active*meeting
+                    rights:
+                      attendShareHolderMeeting
+                      voteShareHolderMeeting
+                  profile_form:
+                    params: shareholder_profile_form
+                
+                role_requirements:
+                  modality: must
+                    params: [Shareholder.companyShares>0]
+                  modality: must_not 
+                    other_roles:
+                      tile: *@Humanity
+                      role_name: BearerSharesHolder
+                        life_cycle_stage: active
+				
+
+          type: role
+            props:
+              title: UltimateBeneficiaryOwner
+					    ...
+
+              role_requirements:
+                modality: must_not 
+                other_roles:
+                    by_role_tag: [sanctions_list,offshore,financial_crimes]
+					  
+				  modality: must
+                    params: [KYCCheck : true]
+					...
+					
+              type: role
+              props:
+                title: Founder
+                description: LiberlandCompany founder
+                life_cycle_stages: 
+                  type: life_cycle_stage
+                  title: string 
+                    - active
+					  rights:
+              - createCharter
+              - editCharter
+              - publishCharter
+              - fillCompanyRegistrationForm
+              - passKYCProcedure
+              profile_form:
+                  params: founder_profile_form
+                
+              role_requirements:
+                  modality: must 
+                  other_roles:
+                    tile: Liberland
+                    role_name: E-Resident
+                      life_cycle_stage: active
+				      modality: must
+                    params: [KYCCheck : true]
+
+      custom_types:
+        type: custom_type
+          props:
+            title: LiberlandCompanyData
+            params: 
+              companyName : string
+              companyID : string
+              scopeOfBusiness : string
+              officeAddr: string
+              numberOfShapes: integer
+              valuePerShape: integer
+              statutoryOrganMembersData : [*profile]
+              companyCharter : Charter
+              UBOsList: [*profile]
+              sharesAgreementDoc: [document|link]
+			
+      type: custom_type
+        props:
+          title: LiberlandCompanyCharter
+          params: 
+            companyIntention : string
+            companyName : string
+            companyTradeNames : string
+            registeredCapital: integer

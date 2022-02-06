@@ -1,0 +1,31 @@
+entity:
+
+  title: 
+  description:
+
+  event_reported:
+
+    creator: USER_ID
+    origins: 
+      tile: TILE_ID
+      rule_connected: RULE_NAME
+
+    report_status: rumor | firsthand
+    content:
+      text: # with mask User did Smth at datetime to Someone or something
+      media:
+      link:
+
+    binary: bool # is your event binary (like the fact of pregnancy) or it has some important quantitative characteristics? 
+    event_scales: [{key:value}] 
+  
+    witnesses: [USER_ID] #other users who can confirm
+
+    evidences:
+      evidence_datetime:
+      evidence_creator:
+      evidence_status: rumor|firsthand
+      evidence_text: !string
+      evidence_media: [file]
+      evidence_link: !href
+    

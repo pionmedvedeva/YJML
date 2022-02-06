@@ -1,0 +1,375 @@
+base_language: en-us
+
+entity: 
+  title: Your Justice Board of Trustees
+  description: 
+
+  tile:
+
+    functional: # what will change in reality if tile will be palyed
+      purpose_of_tile: 
+        type: purpose_of_tile
+        props:
+          title: string
+          trackable: [action] # use wrapped _createEvent or _giveEvidence action to specify what event you want to see here 
+          untrackable: string # and add some free text here if needed
+
+      to_supertile:  # what playing this tile will give to supertile
+        type: to_supertile
+        props:
+          title: Key Decisions
+          supertile: 2 # YJ Tile ID
+          benefit: Board gives YJ key decisions
+
+        to_players: # what playing this tile will give to players
+          type: to_players 
+          props:
+            title: string
+            player: ROLE_NAME
+            benefit: string
+        
+
+    terms:
+     # full
+      type: term 
+      props: 
+        title: String! 
+        description: String! 
+        tags: [string]
+        
+      ## natural with keywords: 
+      something __IS DEFINED__ as something something
+
+    actions:
+
+    # specify your actions here 
+
+      _vote:
+        args:
+          tile_id: THIS
+          agenda: STRING
+        return:
+          vote: bool
+
+      unAnonimousVote:
+        args:
+          tile_id: THIS
+          agenda: STRING
+        return:
+          user_id: USER_ID
+          vote: bool
+
+      vetoDecision:
+        args:
+          tile_id: THIS
+          agenda: string
+          alternative: string
+        return:
+          announce: 
+            content: "This decision is vetoed by" USER_ID
+
+      # выдвигать кого-то на роль СЕО это предлагать кого-то на голосование и предлагать разыграть голосование
+      suggestCEO:
+        args:
+          tile_id: THIS #this tile id
+          params: 
+            new_YJ_CEO: USER_ID
+          roles: [ROLE,USER_ID] #there are automatic rule, voters are members of board
+        return:
+          invitation_sent: [bool]
+
+      voteForCLevel:
+        args:
+          tile_id: THIS
+          agenda:
+            position: string
+            person: USER_ID
+            explanation: string
+        return:
+          voter: USER_ID
+          vote: bool
+
+      _createEvent:
+        args:
+          title: !string
+          description: !string 
+          media: [file]
+          witnesses: [USER_ID]
+        return:
+          new_event: EVENT
+
+      giveFullSetOfAccounts:
+        args:
+          title: !string
+          description: On a regular basis, but not less than annually, the Board of Trustees will assess current accounting policy and prepare a full set of accounts 
+          including full balance sheet, P&L and Capital Flows for the preceding period and plan for subsequent periods. 
+          This process will be entirely transparent at every stage
+          media: [file]
+          witnesses: [USER_ID]
+        return:
+          new_event: EVENT
+
+      _evaluateEvent:
+        args:
+          event_id: EVENT_ID
+          tile_id: TILE_ID
+          rule: RULE_NAME
+          actor: USER_ID #Who will get evaluation he-he-he
+          scale:
+            scale_id: SCALE_ID
+            scale_title: TITLE
+            amount: amount
+        return:
+          rating_event: RATING_EVENT
+
+    constructive:
+
+      subtiles: # sub-tiles are listed and relations are specified
+        subtile_name:
+            
+          entity_id: ENTITY_ID
+
+            type: role_downwards # for auto-appointment
+            props:
+              title: string
+              this_tile_role: 
+                by_name: ROLE_NAME # role in this tile
+                by_right: [right] # rights in this tile with logic operators
+              
+              sub_tile_role:
+                  by_name: ROLE_NAME # role in sub-tile
+                  by_right: [right] # rights in sub-tile with logic operators
+            
+                
+
+            type: role_upwards # for rule-based efforts which must contain checking for conflicts. Experimental ans raw!
+            props:
+              title: string
+              rule: RULE_NAME # rule in this tile
+              
+              sub_tile_role:
+                  by_name: role_name
+                  by_right: [right]
+              
+              this_tile_role: 
+                by_name: role_name
+                by_right: [right]
+
+                  
+            type: convention_theme
+            props:
+              title: string
+              convention_type: value|rule|variable
+              convention_name: string
+              convention_priority: super|sub 
+            
+            type: term_theme
+            props:
+              title: string
+              term_tag: string
+              priority: super|sub
+              explanation: string
+
+
+      roles:
+
+        target_roles:
+        
+          BoardMember:
+            title: Trustee
+            description: Person with expirience
+            tags:
+              - justice
+              - board
+              - management
+
+            active_stage_bdi:
+              beliefs: [VALUE_NAME;we|fit], [EVENT;BOOL] # value specified in tile
+              desire: [action] # one, max two well-specified event-creation actions, what ROLE want to see occured
+              intention: string # main strategy to do specified above  
+
+            life_cycle_stages: 
+                - invite # to fill form or...
+                  rights: [action]
+                - active
+                  rights:
+                    - _vote
+                    - unAnonimousVote
+                    - vetoDecision
+                    - suggestCEO
+                    - voteForCLevel
+                - ex
+                  rights: [action]
+
+            profile_form:
+              params: # what tile wants to store in user's profile about user linked to this role
+                Name: string
+                Surname: string
+                Expirience: string
+              
+            role_requirements:
+              modality: must|must_not # you can see some kind of parralelism with rule declaration, but "may" modality is not needed
+              other_roles:
+                tile: TILE_ID # tile in which other role can or can't be
+                role_name: ROLE_NAME
+                  life_cycle_stage: LIFE_CYCLE_STAGE_NAME
+                role_tags: [string] 
+                # leave all previous blank and "must have at least one role with this tag" in case of "must" modality
+                # and "must have no roles with this tag" in case of "must_not" modality
+              other:
+                params: 
+                  exp_field: @this.tile.tags
+                  experience_years: 5
+                  _open_profile: 1 # for view because we declare that our board will be public
+
+            application_form: # if any
+              params: 
+                Name: string
+                Surname: string
+                Expirience: string
+                Why Board: string
+                What you see as the main goal of project for now: string
+
+          # ROLE_NAME belives something and wants something, so intends to do something. 
+          # ROLE'S LIFE CYCLE is as follows STAGES. Each stage posseses its rights for the ROLE. 
+          # The TILE will collect and store the PROFILE FORM info in connection to this role. 
+          # To play this ROLE, USER must or must not something.
+          # Application form is as follows.
+
+  
+        system_roles:
+
+        design_time_roles:
+
+      custom_types:
+        type: custom_type
+        props:
+          title: string
+          params: [{key:value}]
+
+      rating_scales: 
+        type: rating_scale
+        props:
+          title: STRING
+          scale_id: SCALE_ID
+          quality: string # what general quality is evaluated by this scale (ontology will be presented later on)
+          evaluator: ROLE
+          evaluated: ROLE
+          scale_min: NUMBER # -100 <= min
+          scale_max: NUMBER # min < max <=100 # numbers may differ
+          step: NUMBER # 0.001 < step <= 1 & (max - min) / step == integer
+          tags: [string]
+
+      conventions:
+
+        purpose_of_cooperation:
+          type: purpose_of_cooperation
+          props:
+            title: string # maybe custom name for it  
+            statement:
+              we: string
+              reason: string # why we decided to cooperate
+              purpose: string # what we are going to do by all this
+
+            # natural with keywords   
+            We %somebody% for some %reasons% decided to cooperate in this for achieving %something%. 
+            
+        values:
+          #full
+          type: value
+          props:
+            title:
+              en: string
+              ru: string
+            flex: immutable|fixed until DATE.TIME|flexible 
+            statement:
+              en: string
+              ru: string
+            positions:
+              we: [string] *
+              fit: [string] *
+              unfit: [string]
+              enemy: [string]
+            tags: [string] # for grouping purposes and other
+            #natural with keywords
+            __WE VALUE__ something. __WE CLAIM|THINK|BELIEVE__ that something and __WILL|WILL NOT TOLERATE OTHER OPINIONS SUCH AS__ something.
+
+        
+        rules:
+
+          target_rules:
+            # basic rule about what to do (deontic modal logic inspired)
+            type: rule
+            props:  
+              who: BoardMember 
+                modality: must
+                when: # always (default) or
+                  trigger: # unanimous vote is triggered by whaaaaat??
+                    datetime: DATE.TIME
+                    action: [action]
+                  period: 
+                do: _vote
+                to_target: 
+                comply:
+                  who: ROLE | auto 
+                  action: [action]
+                  rating:
+                    scale_id: SCALE_ID
+                      size:
+                        min: NUMBER
+                        max: NUMBER
+                break:
+                  who: ROLE | auto
+                  action: [action]
+                  rating:
+                    scale_id: SCALE_ID
+                      size:
+                        min: NUMBER
+                        max: NUMBER
+                flex: immutable|fixed until DATE.TIME|flexible
+                value: VALUE_NAME
+                tags: [string] # for grouping purposes and other
+
+
+                # ROLE must|may in some conditions do something (to ROLE). 
+                # If yes, then we rate it somehow, if no, another way
+                # and it will be so FOREVER|TILL DATE because of VAlUE
+
+              type: rule
+              props:  
+                who: BoardMember 
+                  modality: must
+                  when: # always (default) or
+                    trigger: # unanimous vote is triggered by whaaaaat??
+                      datetime: annually #??
+                      action: [action]
+                    period: 
+                  do: giveFullSetOfAccounts
+                  to_target: 1 # humanity Tile
+                  comply:
+                    who: ROLE | auto 
+                    action: [action]
+                    rating:
+                      scale_id: SCALE_ID
+                        size:
+                          min: NUMBER
+                          max: NUMBER
+                  break:
+                    who: ROLE | auto
+                    action: [action]
+                    rating:
+                      scale_id: SCALE_ID
+                        size:
+                          min: NUMBER
+                          max: NUMBER
+                  flex: immutable|fixed until DATE.TIME|flexible
+                  value: VALUE_NAME
+                  tags: [string] # for grouping purposes and other
+
+
+                # ROLE must|may in some conditions do something (to ROLE). 
+                # If yes, then we rate it somehow, if no, another way
+                # and it will be so FOREVER|TILL DATE because of VAlUE
+
+
+          update_rules:

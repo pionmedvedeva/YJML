@@ -1,0 +1,12 @@
+type: problem
+props: 
+  title: string
+  reporting_agent: USER_ID # role as a class of users also can report a problam but...
+  content: # event
+    priors:
+      domain_knowledge: # epistemic logic, like [agent, event, bool] or even [agent, agent, event, bool], or even all of it but in t1 and t2
+      learning_priors: # what are rules of update of domain knowledge?
+    problem_novelty: # num
+
+    #so basically we want to express how agent evaluates some event and even how she evaluates a possibility of elimination of such event(s) or connected things
+

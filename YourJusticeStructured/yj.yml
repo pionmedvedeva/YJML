@@ -1,0 +1,284 @@
+base_language: en-us
+
+entity: 
+  title: YourJustice
+  description: YourJustice is an autonomous organisation existing for the benefit of Humanity
+
+  tile:
+
+    functional:
+      
+      purpose_of_tile: 
+        type: purpose_of_tile
+        props:
+          title: Regulate Work of YJ
+          trackable:  # use wrapped _createEvent or _giveEvidence action to specify what event you want to see here 
+            - action
+          untrackable:  # and add some free text here if needed
+
+      to_supertile:  # what playing this tile will give to supertile
+        type: to_supertile
+        props:
+          title: benefit of Humanity
+          supertile: 1 # humanity ID
+          benefit: coordination and support # and maybe other services?
+
+        to_players: # what playing this tile will give to players
+          FairPay:
+            title: FairPay
+            player: Worker # group
+            benefit: YourJusticeAO will pay fair price for work
+
+          Transparency:
+            title: Transparency
+            player: Investor, Product_user, Human
+            benefit: YourJusticeAO will be fully transparent for investors, Users and every Human in Humanity
+
+
+
+    terms:
+      Humanity:
+        title: Humanity
+        description: Humanity is the environment that originated from and was created by human DNA and manifold of human culture. 
+        tags:
+          - humanity
+          - human
+          - origins
+          - manifold
+          - DNA
+          - culture
+    
+    
+    actions:
+
+    # specify your actions here 
+
+      _createEvent:
+        args:
+          title: !string
+          description: !string 
+          media: [file]
+          witnesses: [USER_ID]
+        return:
+          new_event: EVENT
+
+      _evaluateEvent:
+        args:
+          event_id: EVENT_ID
+          tile_id: TILE_ID
+          rule: RULE_NAME
+          actor: USER_ID #Who will get evaluation he-he-he
+          scale:
+            scale_id: SCALE_ID
+            scale_title: TITLE
+            amount: amount
+        return:
+          rating_event: RATING_EVENT
+
+      
+    constructive:
+
+      subtiles:
+        
+        BoardOfTrustees:
+          - sub-to-super voter
+          - C-Level will implement the decisions of the Board of Trustees.
+            
+          entity_id: 011YJ
+
+            type: role_upwards # for rule-based efforts which must contain checking for conflicts. Experimental ans raw!
+            props:
+              title: Board Memeber is Voter in This tile
+              rule: RULE_NAME # rule in this tile
+              
+              sub_tile_role:
+                  by_name: BoardMember
+                  by_right: [right]
+              
+              this_tile_role: 
+                by_name: Voter
+                by_right: [right]
+
+                  
+            type: convention_theme
+            props:
+              title: string
+              convention_type: value|rule|variable
+              convention_name: string
+              convention_priority: super|sub 
+            
+            type: term_theme
+            props:
+              title: string
+              term_tag: string
+              priority: super|sub
+              explanation: string
+
+        MarketingTeam:
+          - глава маркетинга он же CMO
+
+        OntologyTeam:
+          - head of ontology is ChiefOntologist
+
+        DevTeam:
+          - head of development is CTO
+
+      roles:
+
+        target_group: #целевая группа, чьи общественные отношения регулируются доком
+
+          workers:
+
+            CEO
+
+            CMO
+
+            COO
+
+            CTO
+
+            CPO
+
+            Assistant
+
+          Investor
+
+          Product_user
+
+        system_roles: #системные роли
+
+          _guest
+          _admin
+          _moderator
+
+        design_time_roles: #роли по отношению к документу
+
+          creator
+          contributor
+          voter (same people as board of trustee)
+          ...
+
+      
+      conventions:
+
+        values:
+
+          Life:
+            title:
+              en: Right to Life
+              ru: string
+            flex: immutable 
+            statement:
+              en: 
+              ru: Каждый человек имеет право на жизнь
+            positions:
+              we: Yes *
+              fit: Yes *
+              unfit:
+              enemy: No
+
+          GoodHealth:
+            title:
+              en: Right to have a good health
+              ru: string
+            flex: immutable 
+            statement:
+              en: 
+              ru: Мы желаем себе и всем людям на земле хорошего здоровья
+            positions:
+              we: Yes *
+              fit: Yes *
+              unfit:
+              enemy: No
+          
+          Freedom: 
+            title:
+              en: Freedom
+              ru: string
+            flex: immutable 
+            statement:
+              en: 
+              ru: Каждый человек должен быть свободен в своих решениях
+            positions:
+              we: Yes *
+              fit: Yes *
+              unfit:
+              enemy: No
+
+          Justice: 
+            title:
+              en: Justice
+              ru: string
+            flex: immutable 
+            statement:
+              en: 
+              ru: С людьми нужно обращаться справедливо
+            positions:
+              we: Yes *
+              fit: Yes *
+              unfit:
+              enemy: No
+
+          InformationExchange:
+            title:
+              en: Right to have a good health
+              ru: string
+            flex: immutable 
+            statement:
+              en: 
+              ru: Мы желаем себе и всем людям на земле хорошего здоровья
+            positions:
+              we: Yes *
+              fit: Yes *
+              unfit:
+              enemy: No
+
+          Transparency
+            title:
+              en: Right to have a good health
+              ru: string
+            flex: immutable 
+            statement:
+              en: 
+              ru: Мы желаем себе и всем людям на земле хорошего здоровья
+            positions:
+              we: Yes *
+              fit: Yes *
+              unfit:
+              enemy: No
+          the unfettered exchange of information and 
+          total transparency.
+
+        purpose_of_cooperation:
+            title: benefit of Humanity as a whole
+            statement: 
+              we: 
+              reason:
+              purpose: enable Humanity to achieve the Values and sustain its existence.
+        
+        rules:
+
+          The Golden Rule, Do-As-You-Would-Be-Done-By
+
+          The sole ultimate beneficiary for YourJustice is Humanity as a whole.
+
+          YourJustice is founded and run by a Board of Trustees whose members are and will be at all times publicly named individuals. 
+          
+          CEO who in turn will appoint Chiefs of Departments (C-Level). 
+          Each appointment Of C-LEVEL must be approved by the Board of Trustees
+
+          C-Level will implement the decisions of the Board of Trustees.
+
+          CEO will guarantee the uninterrupted operation of the organisation, 
+          CEO will enforce the implementation of all Board of Trustees resolutions, 
+          CEO will resolve conflicts and act as deputy for all C-level team. 
+          CEO is appointed by the Board of Trustees and has the right & duty to be an observer at all Board of Trustees events.
+
+          YourJustice intents to become a decentralised organisation, run and governed entirely by transparent open-source computer software.
+
+          There are no shareholders and no share capital and never will be. YourJustice is founded by no-strings donations. 
+          In order to fund itself YJ may enter into commercial agreements strictly by unanimous consent of the Board of Trustees.
+
+    
+
+

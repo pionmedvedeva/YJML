@@ -1,0 +1,83 @@
+actions:
+
+  draftContractOfTransfer:
+    args:
+      transferer: USER_ID
+      transferee: USER_ID (maybe not just users?)
+      company: COMPANY_NAME
+      shares: amount
+    return:
+      contract: CONTRACT_NAME
+
+  signContract:
+    args:
+      actors: [USER_ID]
+      contract: CONTRACT_NAME
+    return:
+      signed_contract: CONTRACT_NAME (?)
+  
+  submitContract:
+    args:
+      signed_contract: CONTRACT_NAME
+    return:
+      isSubmitted: bool
+  
+  registerContract:
+    args: 
+      contract: CONTRACT_NAME
+      registrar: ROLE_ID (?)
+    return:
+      registered_contract: CONTRACT_NAME
+
+  transferShares:
+    args:
+      transferer: USER_ID
+      contract: CONTRACT_NAME
+    return:
+      isTransfered: bool
+
+roles:
+
+  type: role
+    props:
+    title: TRANSFERER
+    description: One who transferes a share to someone
+    tags: transfering, shares
+
+    role_requirements:
+      # MUST have shares to transfer
+      # MUST have rights to transfer its
+    
+  type: role
+    props:
+    title: TRANSFEREE
+    description: One who receives a share from someone
+    tags: transfering, shares
+
+    role_requirements:
+      # MUST be able to receive shares (not illegible for some reason)
+      # mb something like MUST_NOT also be a transferer in the same tile
+
+Rules
+
+  type: rule
+  props:
+    type: event
+    props:
+      title: Contract_is_registered
+      description: Registrar of Companies has registered a contract
+      content:
+        text: "REGISTRAR does registerContract" 
+      confirmation_method: actor_report
+      binary: bool
+    
+    event_confirmed: Contract_is_registered
+    event_modality: must
+    when:
+    - always
+    presence_actions:
+    enforcer: system
+      on_whom: TRANSFERER
+      orders: Transfer shares ("transferShares" action)
+      
+    flex: immutable

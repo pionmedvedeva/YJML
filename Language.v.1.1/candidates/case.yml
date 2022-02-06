@@ -1,0 +1,12 @@
+type: case
+props:
+  plaintiff: user
+  defendant: user
+  judje: user
+  court: Tile
+  witness: user
+  circumstances: event
+  evidence: media
+  
+  type_of_damage: moral|health|material
+  
