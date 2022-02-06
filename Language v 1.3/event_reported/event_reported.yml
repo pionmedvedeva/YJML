@@ -1,0 +1,17 @@
+event_reported:
+
+    creator: USER_ID
+    origins:
+      tile: TILE_ID
+      rule_connected: RULE_NAME
+
+    report_status: rumor | firsthand
+    content:
+      text: # with mask User did something at DATETIME to Someone or something
+      media: media
+      link: href
+
+    event_scales: [{key:value}]
+
+    witnesses: [USER_ID]
+    evidences: [EVIDENCE]

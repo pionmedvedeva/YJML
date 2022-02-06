@@ -1,0 +1,4 @@
+functional: @this_tile.functional.yml # what will change in reality if tile will be palyed
+actions: @this_tile.actions.yml
+constructive: @this_tile.actions.yml
+terms: @this_tile.actions.yml
