@@ -1,0 +1,21 @@
+   purpose_of_tile: 
+      type: purpose_of_tile
+      props:
+        title: string
+        trackable: [action] # use wrapped _createEvent or _giveEvidence action to specify what event you want to see here 
+        untrackable: string # and add some free text here if needed
+
+    to_supertile:  # what playing this tile will give to supertile
+      type: to_supertile
+      props:
+        title: string
+        supertile: TILE_ID
+        benefit: string
+
+      to_players: # what playing this tile will give to players
+        type: to_players 
+        props:
+          title: string
+          player: ROLE_NAME
+          benefit: string
+        
