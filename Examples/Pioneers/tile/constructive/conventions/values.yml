@@ -1,0 +1,18 @@
+#full
+  type: value
+  props:
+    title:
+      en: string
+      ru: string
+    flex: immutable|fixed until DATE.TIME|flexible 
+    statement:
+      en: string
+      ru: string
+    positions:
+      we: [string] *
+      fit: [string] *
+      unfit: [string]
+      enemy: [string]
+    tags: [string] # for grouping purposes and other
+    #natural with keywords
+    __WE VALUE__ something. __WE CLAIM|THINK|BELIEVE__ that something and __WILL|WILL NOT TOLERATE OTHER OPINIONS SUCH AS__ something.

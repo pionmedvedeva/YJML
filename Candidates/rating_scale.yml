@@ -1,0 +1,11 @@
+
+rating_scales:
+  type: rating_scale
+  props:
+    scale_id: SCALE_ID
+    quality: string # one word for what you want to scale
+    description: string # if needed
+    formula: =()+-*/ SCALE_ID # if your scale is composite from another scales
+    applicability: [ROLE] # to what roles is applicable
+    min_max_step: {min:NUMBER_MIN;max:NUMBER_MAX;step:STEP (?)} 
+    tags: [string]

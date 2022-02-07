@@ -1,0 +1,3 @@
+purpose_of_cooperation: @purpose_of_cooperation.yml
+rules: rules.yml
+values: values.yml

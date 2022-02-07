@@ -1,0 +1,2 @@
+actions.basic: @actions.basic.yml
+actions.wrapped: @actions.wrapped.yml

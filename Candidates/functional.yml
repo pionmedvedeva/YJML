@@ -3,8 +3,8 @@
      # could only be sole
       type: purpose_of_tile
       props:
-        domain: governance
-          thing: how to create new things and do good
+        domain: string # better specification of what domain?
+          thing: string
         actions: [action] # what will people do better using this tile
         # use wrapped _createEvent or _giveEvidence action to specify what event you want to see here
         comment: string # and add some free text here if needed

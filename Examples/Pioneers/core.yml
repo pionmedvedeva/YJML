@@ -1,0 +1,6 @@
+entity:
+
+  title: string
+  description: string
+
+  @tile/tile.yml

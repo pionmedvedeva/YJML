@@ -1,0 +1,4 @@
+type: custom_type
+props:
+  title: string
+  params: [{key:value}]
